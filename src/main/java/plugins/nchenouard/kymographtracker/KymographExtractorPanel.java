@@ -1,16 +1,5 @@
 package plugins.nchenouard.kymographtracker;
 
-import icy.canvas.IcyCanvas;
-import icy.image.IcyBufferedImage;
-import icy.main.Icy;
-import icy.painter.Overlay;
-import icy.roi.ROI;
-import icy.roi.ROI2D;
-import icy.sequence.Sequence;
-import icy.swimmingPool.SwimmingObject;
-import icy.type.DataType;
-import icy.type.collection.array.ArrayUtil;
-
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -40,6 +29,16 @@ import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import icy.canvas.IcyCanvas;
+import icy.image.IcyBufferedImage;
+import icy.main.Icy;
+import icy.painter.Overlay;
+import icy.roi.ROI;
+import icy.roi.ROI2D;
+import icy.sequence.Sequence;
+import icy.swimmingPool.SwimmingObject;
+import icy.type.DataType;
+import icy.type.collection.array.ArrayUtil;
 import plugins.kernel.roi.roi2d.ROI2DShape;
 import plugins.nchenouard.isotropicwavelets.IsotropicWaveletType;
 import plugins.nchenouard.kymographtracker.spline.CubicSmoothingSpline;
@@ -59,46 +58,65 @@ class KymographExtractorPanel extends ActionPanel implements PathListener
 	 * 
 	 */
 	private static final long serialVersionUID = 3741312080376160439L;
+
 	JLabel tracingChoiceLabel;
+
 	JRadioButton useOriginalSequenceButton;
+
 	JRadioButton useOriginalSequenceROIButton;
+
 	JRadioButton traceInMaxProjectionButton;
+
 	JRadioButton traceInFilteredProjectionButton;
+
 	ButtonGroup buttonGroup = new ButtonGroup();
 
 	JPanel descriptionPanel;
+
 	JPanel originalTracingPanel;
+
 	JEditorPane originalTracingDescription;
+
 	JPanel maxTracingPanel;
+
 	JEditorPane maxTracingDescription;
+
 	JPanel roiTracingPanel;
+
 	JEditorPane roiTrackingDescription;
+
 	JCheckBox separateAnteroRetroBox;
+
 	JButton extractKymographsButton;
+
 	JButton startTrackingButton;
 
 	NumberFormat diskFormat = NumberFormat.getNumberInstance();
-	JFormattedTextField diskRadiusField = new JFormattedTextField(diskFormat);
+
+	JFormattedTextField diskRadiusField = new JFormattedTextField( diskFormat );
 
 	Sequence selectedSequence = null;
+
 	Sequence maxProjectionSequence = null;
+
 	Sequence filteredProjectionSequence;
 
 	double alpha = 0.01;
 
 	boolean isEnabled = true;
 
-	public KymographExtractorPanel(boolean isEnabled) {
+	public KymographExtractorPanel( final boolean isEnabled )
+	{
 		description = "Kymograph Extraction";
-		node = new DefaultMutableTreeNode(description);
-		this.setBorder(new TitledBorder(description));
+		node = new DefaultMutableTreeNode( description );
+		this.setBorder( new TitledBorder( description ) );
 
-		this.setLayout(new BorderLayout());
+		this.setLayout( new BorderLayout() );
 
-		JPanel northPanel = new JPanel(new GridBagLayout());
-		this.add(northPanel, BorderLayout.NORTH);
+		final JPanel northPanel = new JPanel( new GridBagLayout() );
+		this.add( northPanel, BorderLayout.NORTH );
 
-		GridBagConstraints c = new GridBagConstraints();
+		final GridBagConstraints c = new GridBagConstraints();
 		c.gridheight = 1;
 		c.gridwidth = 1;
 		c.gridx = 0;
@@ -106,166 +124,171 @@ class KymographExtractorPanel extends ActionPanel implements PathListener
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
 		c.weighty = 0.0;
-		c.insets = new Insets(2, 2, 2, 2);
+		c.insets = new Insets( 2, 2, 2, 2 );
 
-		tracingChoiceLabel = new JLabel("Kymograph extraction path:");
-		northPanel.add(tracingChoiceLabel, c);
-		c.gridy ++;
+		tracingChoiceLabel = new JLabel( "Kymograph extraction path:" );
+		northPanel.add( tracingChoiceLabel, c );
+		c.gridy++;
 
-		useOriginalSequenceROIButton = new JRadioButton("use ROIs in the original sequence,", true);
-		useOriginalSequenceROIButton.addActionListener(new ActionListener() {
+		useOriginalSequenceROIButton = new JRadioButton( "use ROIs in the original sequence,", true );
+		useOriginalSequenceROIButton.addActionListener( new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (useOriginalSequenceROIButton.isSelected())
-					selectedButtonChanged(useOriginalSequenceROIButton);
+			public void actionPerformed( final ActionEvent arg0 )
+			{
+				if ( useOriginalSequenceROIButton.isSelected() )
+					selectedButtonChanged( useOriginalSequenceROIButton );
 			}
-		});
-		northPanel.add(useOriginalSequenceROIButton, c);
-		c.gridy ++;
+		} );
+		northPanel.add( useOriginalSequenceROIButton, c );
+		c.gridy++;
 
-		northPanel.add(new JLabel("or trace a path:"), c);
-		c.gridy ++;
+		northPanel.add( new JLabel( "or trace a path:" ), c );
+		c.gridy++;
 
-
-		useOriginalSequenceButton = new JRadioButton("in the original sequence,", false);
-		useOriginalSequenceButton.addActionListener(new ActionListener() {
+		useOriginalSequenceButton = new JRadioButton( "in the original sequence,", false );
+		useOriginalSequenceButton.addActionListener( new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (useOriginalSequenceButton.isSelected())
-					selectedButtonChanged(useOriginalSequenceButton);
+			public void actionPerformed( final ActionEvent arg0 )
+			{
+				if ( useOriginalSequenceButton.isSelected() )
+					selectedButtonChanged( useOriginalSequenceButton );
 			}
-		});
-		northPanel.add(useOriginalSequenceButton, c);
-		c.gridy ++;
+		} );
+		northPanel.add( useOriginalSequenceButton, c );
+		c.gridy++;
 
-		//		traceInMaxProjectionButton = new JRadioButton("in the maximum projection of the sequence,", false);
-		//		traceInMaxProjectionButton.addActionListener(new ActionListener() {
-		//			@Override
-		//			public void actionPerformed(ActionEvent arg0) {
-		//				if (traceInMaxProjectionButton.isSelected())
-		//					selectedButtonChanged(traceInMaxProjectionButton);
-		//			}
-		//		});
-		//		northPanel.add(traceInMaxProjectionButton, c);
-		//		c.gridy ++;
+		// traceInMaxProjectionButton = new JRadioButton("in the maximum
+		// projection of the sequence,", false);
+		// traceInMaxProjectionButton.addActionListener(new ActionListener() {
+		// @Override
+		// public void actionPerformed(ActionEvent arg0) {
+		// if (traceInMaxProjectionButton.isSelected())
+		// selectedButtonChanged(traceInMaxProjectionButton);
+		// }
+		// });
+		// northPanel.add(traceInMaxProjectionButton, c);
+		// c.gridy ++;
 
-		traceInFilteredProjectionButton = new JRadioButton("in an enhanced projection of the sequence.", false);
-		traceInFilteredProjectionButton.addActionListener(new ActionListener() {
+		traceInFilteredProjectionButton = new JRadioButton( "in an enhanced projection of the sequence.", false );
+		traceInFilteredProjectionButton.addActionListener( new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (traceInFilteredProjectionButton.isSelected())
-					selectedButtonChanged(traceInFilteredProjectionButton);
+			public void actionPerformed( final ActionEvent arg0 )
+			{
+				if ( traceInFilteredProjectionButton.isSelected() )
+					selectedButtonChanged( traceInFilteredProjectionButton );
 			}
-		});
-		northPanel.add(traceInFilteredProjectionButton, c);
-		c.gridy ++;
+		} );
+		northPanel.add( traceInFilteredProjectionButton, c );
+		c.gridy++;
 
-		buttonGroup.add(useOriginalSequenceButton);
-		buttonGroup.add(traceInMaxProjectionButton);
-		buttonGroup.add(traceInFilteredProjectionButton);
-		buttonGroup.add(useOriginalSequenceROIButton);
-		useOriginalSequenceROIButton.setSelected(true);
+		buttonGroup.add( useOriginalSequenceButton );
+		buttonGroup.add( traceInMaxProjectionButton );
+		buttonGroup.add( traceInFilteredProjectionButton );
+		buttonGroup.add( useOriginalSequenceROIButton );
+		useOriginalSequenceROIButton.setSelected( true );
 
-
-		roiTracingPanel = new JPanel(new BorderLayout());
+		roiTracingPanel = new JPanel( new BorderLayout() );
 		roiTrackingDescription = new JEditorPane();
-		//roiTrackingDescription.setPreferredSize(new Dimension(100, 100));
-		roiTrackingDescription.setContentType("text/html");
-		roiTrackingDescription.setEditable(false);
-		roiTrackingDescription.setText("Use the <strong>ROIs in the current sequence</strong> as the paths along which to extract the kymographs.");
-		roiTrackingDescription.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-		roiTrackingDescription.setEditable(false);
-		roiTracingPanel.add(roiTrackingDescription, BorderLayout.CENTER);
+		// roiTrackingDescription.setPreferredSize(new Dimension(100, 100));
+		roiTrackingDescription.setContentType( "text/html" );
+		roiTrackingDescription.setEditable( false );
+		roiTrackingDescription.setText( "Use the <strong>ROIs in the current sequence</strong> as the paths along which to extract the kymographs." );
+		roiTrackingDescription.setBorder( BorderFactory.createLineBorder( Color.GRAY ) );
+		roiTrackingDescription.setEditable( false );
+		roiTracingPanel.add( roiTrackingDescription, BorderLayout.CENTER );
 
-		originalTracingPanel = new JPanel(new BorderLayout());
+		originalTracingPanel = new JPanel( new BorderLayout() );
 		originalTracingDescription = new JEditorPane();
-		//originalTracingDescription.setPreferredSize(new Dimension(100, 100));
-		originalTracingDescription.setContentType("text/html");
-		originalTracingDescription.setEditable(false);
-		originalTracingDescription.setText("<strong>Trace extraction paths</strong> in the sequence to analyze. Multiple paths can be traced.");
-		originalTracingDescription.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-		originalTracingDescription.setEditable(false);
-		originalTracingPanel.add(originalTracingDescription, BorderLayout.CENTER);
+		// originalTracingDescription.setPreferredSize(new Dimension(100, 100));
+		originalTracingDescription.setContentType( "text/html" );
+		originalTracingDescription.setEditable( false );
+		originalTracingDescription.setText( "<strong>Trace extraction paths</strong> in the sequence to analyze. Multiple paths can be traced." );
+		originalTracingDescription.setBorder( BorderFactory.createLineBorder( Color.GRAY ) );
+		originalTracingDescription.setEditable( false );
+		originalTracingPanel.add( originalTracingDescription, BorderLayout.CENTER );
 
-		maxTracingPanel = new JPanel(new BorderLayout());
+		maxTracingPanel = new JPanel( new BorderLayout() );
 		maxTracingDescription = new JEditorPane();
 
-		maxTracingDescription.setEditable(false);
-		maxTracingDescription.setContentType("text/html");
-		//	maxTracingDescription.setPreferredSize(new Dimension(100, 100));
-		maxTracingDescription.setEditable(false);
-		maxTracingDescription.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-		maxTracingDescription.setText("<strong>Trace extraction paths</strong> in an enhanced projection of the sequence. Multiple paths can be traced.");
-		maxTracingPanel.add(maxTracingDescription, BorderLayout.CENTER);
-
+		maxTracingDescription.setEditable( false );
+		maxTracingDescription.setContentType( "text/html" );
+		// maxTracingDescription.setPreferredSize(new Dimension(100, 100));
+		maxTracingDescription.setEditable( false );
+		maxTracingDescription.setBorder( BorderFactory.createLineBorder( Color.GRAY ) );
+		maxTracingDescription.setText( "<strong>Trace extraction paths</strong> in an enhanced projection of the sequence. Multiple paths can be traced." );
+		maxTracingPanel.add( maxTracingDescription, BorderLayout.CENTER );
 
 		descriptionPanel = new JPanel();
-		northPanel.add(descriptionPanel, c);
-		c.gridy ++;
-		descriptionPanel.setLayout(new CardLayout());
-		descriptionPanel.add(originalTracingPanel, useOriginalSequenceButton.getText());
-		//		descriptionPanel.add(maxTracingPanel, traceInMaxProjectionButton.getText());
-		descriptionPanel.add(maxTracingPanel, traceInFilteredProjectionButton.getText());
-		descriptionPanel.add(roiTracingPanel, useOriginalSequenceROIButton.getText());
+		northPanel.add( descriptionPanel, c );
+		c.gridy++;
+		descriptionPanel.setLayout( new CardLayout() );
+		descriptionPanel.add( originalTracingPanel, useOriginalSequenceButton.getText() );
+		// descriptionPanel.add(maxTracingPanel,
+		// traceInMaxProjectionButton.getText());
+		descriptionPanel.add( maxTracingPanel, traceInFilteredProjectionButton.getText() );
+		descriptionPanel.add( roiTracingPanel, useOriginalSequenceROIButton.getText() );
 
-		separateAnteroRetroBox = new JCheckBox("Split anterograde and retrograde");
-		separateAnteroRetroBox.setToolTipText("Separate anterograde and retrograde moving particles in distinct kymographs");
-		northPanel.add(separateAnteroRetroBox, c);
+		separateAnteroRetroBox = new JCheckBox( "Split anterograde and retrograde" );
+		separateAnteroRetroBox.setToolTipText( "Separate anterograde and retrograde moving particles in distinct kymographs" );
+		northPanel.add( separateAnteroRetroBox, c );
 		c.gridy++;
 
-		northPanel.add(new JLabel("Radius of the averaging area:"), c);
+		northPanel.add( new JLabel( "Radius of the averaging area:" ), c );
 		c.gridy++;
-		diskRadiusField.setValue(2);
-		northPanel.add(diskRadiusField, c);
-		c.gridy++;
-
-		JPanel southPanel = new JPanel(new GridLayout(2, 1));
-
-
-		extractKymographsButton = new JButton("Extract kymographs");
-		southPanel.add(extractKymographsButton);
+		diskRadiusField.setValue( 2 );
+		northPanel.add( diskRadiusField, c );
 		c.gridy++;
 
-		extractKymographsButton.addActionListener(new ActionListener(){
+		final JPanel southPanel = new JPanel( new GridLayout( 2, 1 ) );
+
+		extractKymographsButton = new JButton( "Extract kymographs" );
+		southPanel.add( extractKymographsButton );
+		c.gridy++;
+
+		extractKymographsButton.addActionListener( new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent arg0) 
+			public void actionPerformed( final ActionEvent arg0 )
 			{
 				extractKymographs();
 			}
-		});	
+		} );
 
+		startTrackingButton = new JButton( "Trace tracks in kymographs" );
+		southPanel.add( startTrackingButton, BorderLayout.CENTER );
+		this.add( southPanel, BorderLayout.SOUTH );
 
-		startTrackingButton = new JButton("Trace tracks in kymographs");
-		southPanel.add(startTrackingButton, BorderLayout.CENTER);
-		this.add(southPanel, BorderLayout.SOUTH);
-
-		selectedButtonChanged(useOriginalSequenceROIButton);
-		enableGUI(isEnabled);
+		selectedButtonChanged( useOriginalSequenceROIButton );
+		enableGUI( isEnabled );
 	}
 
-	private void selectedButtonChanged(JRadioButton selectedButton)
+	private void selectedButtonChanged( final JRadioButton selectedButton )
 	{
-		((CardLayout)descriptionPanel.getLayout()).show(descriptionPanel, selectedButton.getText());
+		( ( CardLayout ) descriptionPanel.getLayout() ).show( descriptionPanel, selectedButton.getText() );
 		stopTracers();
 		startTracers();
 	}
 
-	public void enableGUI(boolean enable) {
-		if (enable != isEnabled)
+	public void enableGUI( final boolean enable )
+	{
+		if ( enable != isEnabled )
 		{
 			isEnabled = enable;
-			//			tracingChoiceLabel.setEnabled(enable);
-			//			useOriginalSequenceButton.setEnabled(enable);
-			//			useOriginalSequenceROIButton.setEnabled(enable);
-			//			traceInMaxProjectionButton.setEnabled(enable);
-			//			originalTracingDescription.setEnabled(enable);
-			//			maxTracingDescription.setEnabled(enable);
-			//			roiTrackingDescription.setEnabled(enable);
-			//			separateAnteroRetroBox.setEnabled(enable);
-			//			extractKymographsButton.setEnabled(enable);
-			//			startTrackingButton.setEnabled(enable);
-			if (!enable) // stop tracing activities
-				stopTracers();			
+			// tracingChoiceLabel.setEnabled(enable);
+			// useOriginalSequenceButton.setEnabled(enable);
+			// useOriginalSequenceROIButton.setEnabled(enable);
+			// traceInMaxProjectionButton.setEnabled(enable);
+			// originalTracingDescription.setEnabled(enable);
+			// maxTracingDescription.setEnabled(enable);
+			// roiTrackingDescription.setEnabled(enable);
+			// separateAnteroRetroBox.setEnabled(enable);
+			// extractKymographsButton.setEnabled(enable);
+			// startTrackingButton.setEnabled(enable);
+			if ( !enable ) // stop tracing activities
+				stopTracers();
 			else
 				startTracers();
 		}
@@ -274,31 +297,31 @@ class KymographExtractorPanel extends ActionPanel implements PathListener
 	private void stopTracers()
 	{
 		// remove previous tracing painters from sequence
-		if (selectedSequence != null)
+		if ( selectedSequence != null )
 		{
-			for (Overlay painter:selectedSequence.getOverlays(InteractiveMultipleDjikstraTracingESC.class))
+			for ( final Overlay painter : selectedSequence.getOverlays( InteractiveMultipleDjikstraTracingESC.class ) )
 			{
-				((InteractiveMultipleDjikstraTracingESC)painter).removePathLister(this);
-				((InteractiveMultipleDjikstraTracingESC)painter).stopTracing();
-				selectedSequence.removeOverlay(painter);
+				( ( InteractiveMultipleDjikstraTracingESC ) painter ).removePathLister( this );
+				( ( InteractiveMultipleDjikstraTracingESC ) painter ).stopTracing();
+				selectedSequence.removeOverlay( painter );
 			}
 		}
-		if (maxProjectionSequence != null)
+		if ( maxProjectionSequence != null )
 		{
-			for (Overlay painter: maxProjectionSequence.getOverlays(InteractiveMultipleDjikstraTracingESC.class))
+			for ( final Overlay painter : maxProjectionSequence.getOverlays( InteractiveMultipleDjikstraTracingESC.class ) )
 			{
-				((InteractiveMultipleDjikstraTracingESC)painter).removePathLister(this);
-				((InteractiveMultipleDjikstraTracingESC)painter).stopTracing();
-				maxProjectionSequence.removeOverlay(painter);
+				( ( InteractiveMultipleDjikstraTracingESC ) painter ).removePathLister( this );
+				( ( InteractiveMultipleDjikstraTracingESC ) painter ).stopTracing();
+				maxProjectionSequence.removeOverlay( painter );
 			}
 		}
-		if (filteredProjectionSequence != null)
+		if ( filteredProjectionSequence != null )
 		{
-			for (Overlay painter: filteredProjectionSequence.getOverlays(InteractiveMultipleDjikstraTracingESC.class))
+			for ( final Overlay painter : filteredProjectionSequence.getOverlays( InteractiveMultipleDjikstraTracingESC.class ) )
 			{
-				((InteractiveMultipleDjikstraTracingESC)painter).removePathLister(this);
-				((InteractiveMultipleDjikstraTracingESC)painter).stopTracing();
-				filteredProjectionSequence.removeOverlay(painter);				
+				( ( InteractiveMultipleDjikstraTracingESC ) painter ).removePathLister( this );
+				( ( InteractiveMultipleDjikstraTracingESC ) painter ).stopTracing();
+				filteredProjectionSequence.removeOverlay( painter );
 			}
 		}
 	}
@@ -307,114 +330,116 @@ class KymographExtractorPanel extends ActionPanel implements PathListener
 	{
 		// add tracing painters to newly selected sequence
 		// if (isEnabled && selectedSequence != null)
-		if (selectedSequence != null)
+		if ( selectedSequence != null )
 		{
-			if (useOriginalSequenceButton.isSelected())
-			{			
-				InteractiveMultipleDjikstraTracingESC tracer = new InteractiveMultipleDjikstraTracingESC(selectedSequence, alpha, false);
-				selectedSequence.addOverlay(tracer);
-				tracer.addPathLister(this);
+			if ( useOriginalSequenceButton.isSelected() )
+			{
+				final InteractiveMultipleDjikstraTracingESC tracer = new InteractiveMultipleDjikstraTracingESC( selectedSequence, alpha, false );
+				selectedSequence.addOverlay( tracer );
+				tracer.addPathLister( this );
 			}
 			maxProjectionSequence = null;
-			//			if (traceInMaxProjectionButton.isSelected())
-			//			{
-			//				maxProjectionSequence = getMaxProjectionSequence(selectedSequence);
-			//				Icy.getMainInterface().addSequence(maxProjectionSequence);
-			//				InteractiveMultipleDjikstraTracingESC tracer = new InteractiveMultipleDjikstraTracingESC(selectedSequence, alpha, false);
-			//				maxProjectionSequence.addPainter(tracer);
-			//				tracer.addPathLister(this);
-			//			}
+			// if (traceInMaxProjectionButton.isSelected())
+			// {
+			// maxProjectionSequence =
+			// getMaxProjectionSequence(selectedSequence);
+			// Icy.getMainInterface().addSequence(maxProjectionSequence);
+			// InteractiveMultipleDjikstraTracingESC tracer = new
+			// InteractiveMultipleDjikstraTracingESC(selectedSequence, alpha,
+			// false);
+			// maxProjectionSequence.addPainter(tracer);
+			// tracer.addPathLister(this);
+			// }
 			filteredProjectionSequence = null;
-			if (traceInFilteredProjectionButton.isSelected())
+			if ( traceInFilteredProjectionButton.isSelected() )
 			{
 //				filteredProjectionSequence = getFilteredProjectionSequenceWithRiesz(selectedSequence);
-				filteredProjectionSequence = getMaxMinDiffProjectionSequence(selectedSequence);
-				
-				Icy.getMainInterface().addSequence(filteredProjectionSequence);
-				InteractiveMultipleDjikstraTracingESC tracer = new InteractiveMultipleDjikstraTracingESC(filteredProjectionSequence, alpha, false);
-				filteredProjectionSequence.addOverlay(tracer);
-				tracer.addPathLister(this);
+				filteredProjectionSequence = getMaxMinDiffProjectionSequence( selectedSequence );
+
+				Icy.getMainInterface().addSequence( filteredProjectionSequence );
+				final InteractiveMultipleDjikstraTracingESC tracer = new InteractiveMultipleDjikstraTracingESC( filteredProjectionSequence, alpha, false );
+				filteredProjectionSequence.addOverlay( tracer );
+				tracer.addPathLister( this );
 			}
 		}
 	}
 
 	@Override
-	protected void changeSelectedSequence(Sequence sequence)
+	protected void changeSelectedSequence( final Sequence sequence )
 	{
 		stopTracers();
 		selectedSequence = sequence;
 		startTracers();
 	}
 
-	Sequence getMaxProjectionSequence(Sequence seq)
+	Sequence getMaxProjectionSequence( final Sequence seq )
 	{
 		Sequence projectionSequence = null;
-		if (seq != null)
+		if ( seq != null )
 		{
-			projectionSequence = new Sequence("Projection_"+seq.getName());
-			projectionSequence.setImage(0, 0, new IcyBufferedImage(seq.getSizeX(), seq.getSizeY(), 1, DataType.DOUBLE));
-			double[] tabValues = projectionSequence.getImage(0, 0, 0).getDataXYAsDouble(0);
-			//			for (int y = 0; y < seq.getSizeY(); y++)
-			//				for (int x = 0; x < seq.getSizeX(); x++)
-			//				{
-			//					double maxVal = seq.getData(0, 0, 0, y, x);
-			//					for (int t = 1; t < seq.getSizeT(); t++)
-			//						if (maxVal < seq.getData(t, 0, 0, y, x))
-			//							maxVal = seq.getData(t, 0, 0, y, x);
-			//					tabValues[x + y*seq.getWidth()] = maxVal;
-			//				}
-			for (int t = 0; t < seq.getSizeT(); t++)
+			projectionSequence = new Sequence( "Projection_" + seq.getName() );
+			projectionSequence.setImage( 0, 0, new IcyBufferedImage( seq.getSizeX(), seq.getSizeY(), 1, DataType.DOUBLE ) );
+			final double[] tabValues = projectionSequence.getImage( 0, 0, 0 ).getDataXYAsDouble( 0 );
+			// for (int y = 0; y < seq.getSizeY(); y++)
+			// for (int x = 0; x < seq.getSizeX(); x++)
+			// {
+			// double maxVal = seq.getData(0, 0, 0, y, x);
+			// for (int t = 1; t < seq.getSizeT(); t++)
+			// if (maxVal < seq.getData(t, 0, 0, y, x))
+			// maxVal = seq.getData(t, 0, 0, y, x);
+			// tabValues[x + y*seq.getWidth()] = maxVal;
+			// }
+			for ( int t = 0; t < seq.getSizeT(); t++ )
 			{
-				double[] image = (double[]) ArrayUtil.arrayToDoubleArray(seq.getImage(t, 0, 0).getDataXY(0), seq.isSignedDataType());
-				for (int i = 0; i < tabValues.length; i++)
-					if (image[i] > tabValues[i])
-						tabValues[i] = image[i];
+				final double[] image = ( double[] ) ArrayUtil.arrayToDoubleArray( seq.getImage( t, 0, 0 ).getDataXY( 0 ), seq.isSignedDataType() );
+				for ( int i = 0; i < tabValues.length; i++ )
+					if ( image[ i ] > tabValues[ i ] )
+						tabValues[ i ] = image[ i ];
 			}
-			projectionSequence.dataChanged();
-		}
-		return projectionSequence;
-	}
-	
-	
-	Sequence getMaxMinDiffProjectionSequence(Sequence seq)
-	{
-		Sequence projectionSequence = null;
-		if (seq != null)
-		{
-			projectionSequence = new Sequence("Projection_"+seq.getName());
-			projectionSequence.setImage(0, 0, new IcyBufferedImage(seq.getSizeX(), seq.getSizeY(), 1, DataType.DOUBLE));
-			double[] tabValues = projectionSequence.getImage(0, 0, 0).getDataXYAsDouble(0);
-			double[] minValues = tabValues.clone();
-			for (int t = 0; t < seq.getSizeT(); t++)
-			{
-				double[] image = (double[]) ArrayUtil.arrayToDoubleArray(seq.getImage(t, 0, 0).getDataXY(0), seq.isSignedDataType());
-				for (int i = 0; i < tabValues.length; i++)
-					if (image[i] > tabValues[i])
-						tabValues[i] = image[i];
-					else if (image[i] < minValues[i])
-						minValues[i] = image[i];						
-			}
-			for (int i = 0; i < tabValues[i]; i++)
-				tabValues[i] -= minValues[i];
-			
 			projectionSequence.dataChanged();
 		}
 		return projectionSequence;
 	}
 
-	Sequence getFilteredProjectionSequenceWithRiesz(Sequence seq)
+	Sequence getMaxMinDiffProjectionSequence( final Sequence seq )
+	{
+		Sequence projectionSequence = null;
+		if ( seq != null )
+		{
+			projectionSequence = new Sequence( "Projection_" + seq.getName() );
+			projectionSequence.setImage( 0, 0, new IcyBufferedImage( seq.getSizeX(), seq.getSizeY(), 1, DataType.DOUBLE ) );
+			final double[] tabValues = projectionSequence.getImage( 0, 0, 0 ).getDataXYAsDouble( 0 );
+			final double[] minValues = tabValues.clone();
+			for ( int t = 0; t < seq.getSizeT(); t++ )
+			{
+				final double[] image = ( double[] ) ArrayUtil.arrayToDoubleArray( seq.getImage( t, 0, 0 ).getDataXY( 0 ), seq.isSignedDataType() );
+				for ( int i = 0; i < tabValues.length; i++ )
+					if ( image[ i ] > tabValues[ i ] )
+						tabValues[ i ] = image[ i ];
+					else if ( image[ i ] < minValues[ i ] )
+						minValues[ i ] = image[ i ];
+			}
+			for ( int i = 0; i < tabValues[ i ]; i++ )
+				tabValues[ i ] -= minValues[ i ];
+
+			projectionSequence.dataChanged();
+		}
+		return projectionSequence;
+	}
+
+	Sequence getFilteredProjectionSequenceWithRiesz( final Sequence seq )
 	{
 
 		// compute the Simoncelli's wavelet representation of the sequence
-		int height = seq.getSizeY();
-		int width = seq.getSizeX();
-		boolean isRealImage = true;		
+		final int height = seq.getSizeY();
+		final int width = seq.getSizeX();
+		final boolean isRealImage = true;
 		// Wavelets
 		int numScales = 4;
 		int tmpNumScales = 0;
-		for (int i = 0; i < numScales; i++)
+		for ( int i = 0; i < numScales; i++ )
 		{
-			if (height < Math.pow(2, i) || width < Math.pow(2, i))
+			if ( height < Math.pow( 2, i ) || width < Math.pow( 2, i ) )
 			{
 				break;
 			}
@@ -422,280 +447,292 @@ class KymographExtractorPanel extends ActionPanel implements PathListener
 		}
 		numScales = tmpNumScales;
 
-		boolean prefilter = false;
-		IsotropicWaveletType waveletType = IsotropicWaveletType.Simoncelli;
+		final boolean prefilter = false;
+		final IsotropicWaveletType waveletType = IsotropicWaveletType.Simoncelli;
 		// Riesz transform
-		int order = 8;
-		HarmonicTypes harmonicType = HarmonicTypes.even;
-		boolean prepareRieszFilters = true;
+		final int order = 8;
+		final HarmonicTypes harmonicType = HarmonicTypes.even;
+		final boolean prepareRieszFilters = true;
 
-		RieszWaveletConfig config = new RieszWaveletConfig(width, height, isRealImage, numScales, waveletType, prefilter, prepareRieszFilters, order, harmonicType, false);		
-		ArrayList<RieszConfig> rieszConfigList = config.getRieszConfigurations();
+		final RieszWaveletConfig config = new RieszWaveletConfig( width, height, isRealImage, numScales, waveletType, prefilter, prepareRieszFilters, order, harmonicType, false );
+		final ArrayList< RieszConfig > rieszConfigList = config.getRieszConfigurations();
 
 		// compute generalization
-		ArrayList<RieszGeneralization> generalizationList = new ArrayList<RieszGeneralization>();
-		for (int i = 0; i < numScales; i++)
+		final ArrayList< RieszGeneralization > generalizationList = new ArrayList< RieszGeneralization >();
+		for ( int i = 0; i < numScales; i++ )
 		{
-			RieszGeneralization rieszGeneralization = new RieszGeneralization(StandardRieszFrames.Simoncelli, rieszConfigList.get(i));
-			generalizationList.add(rieszGeneralization);
+			final RieszGeneralization rieszGeneralization = new RieszGeneralization( StandardRieszFrames.Simoncelli, rieszConfigList.get( i ) );
+			generalizationList.add( rieszGeneralization );
 		}
 
 		// get the max projection of the sequence
-		double[] tabValues = (double[]) ArrayUtil.arrayToDoubleArray(seq.getImage(0, 0, 0).getDataXY(0), seq.isSignedDataType());
-		for (int t = 1; t < seq.getSizeT(); t++)
+		final double[] tabValues = ( double[] ) ArrayUtil.arrayToDoubleArray( seq.getImage( 0, 0, 0 ).getDataXY( 0 ), seq.isSignedDataType() );
+		for ( int t = 1; t < seq.getSizeT(); t++ )
 		{
-			double[] image = (double[]) ArrayUtil.arrayToDoubleArray(seq.getImage(t, 0, 0).getDataXY(0), seq.isSignedDataType());
-			for (int i = 0; i < tabValues.length; i++)
-				if (image[i] > tabValues[i])
-					tabValues[i] = image[i];
+			final double[] image = ( double[] ) ArrayUtil.arrayToDoubleArray( seq.getImage( t, 0, 0 ).getDataXY( 0 ), seq.isSignedDataType() );
+			for ( int i = 0; i < tabValues.length; i++ )
+				if ( image[ i ] > tabValues[ i ] )
+					tabValues[ i ] = image[ i ];
 		}
 
 		// apply the riesz transforms to the wavelet scales
-		RieszWaveletCoefficients coefficients  = config.multiscaleRieszAnalysisInFourier(tabValues, width, height, generalizationList);
+		final RieszWaveletCoefficients coefficients = config.multiscaleRieszAnalysisInFourier( tabValues, width, height, generalizationList );
 		// keep only the 25 percent coefficients in each band
-		double[] hpR = coefficients.getHPResidual();
-		if (hpR != null)
+		final double[] hpR = coefficients.getHPResidual();
+		if ( hpR != null )
 		{
-			double[] tmp = hpR.clone();
-			for (int i = 0; i < tmp.length; i++)
-				tmp[i] = tmp[i]*tmp[i];
-			Arrays.sort(tmp);
-			double threshold = tmp[(int)(tmp.length*0.75)];
-			for (int i = 0; i < tmp.length; i++)
-				if (hpR[i]*hpR[i] < threshold)
-					hpR[i] = 0;
+			final double[] tmp = hpR.clone();
+			for ( int i = 0; i < tmp.length; i++ )
+				tmp[ i ] = tmp[ i ] * tmp[ i ];
+			Arrays.sort( tmp );
+			final double threshold = tmp[ ( int ) ( tmp.length * 0.75 ) ];
+			for ( int i = 0; i < tmp.length; i++ )
+				if ( hpR[ i ] * hpR[ i ] < threshold )
+					hpR[ i ] = 0;
 		}
-		double[] lpR = coefficients.getLPResidual();
-		for (int i = 0; i < lpR.length; i++)
-			lpR[i] = 0;
-		for (int scale = 0; scale < coefficients.getNumScales(); scale++)
+		final double[] lpR = coefficients.getLPResidual();
+		for ( int i = 0; i < lpR.length; i++ )
+			lpR[ i ] = 0;
+		for ( int scale = 0; scale < coefficients.getNumScales(); scale++ )
 		{
-			double[][] c = coefficients.getRieszBandsAtScale(scale);
-			for (int b = 0; b < c.length; b++)
+			final double[][] c = coefficients.getRieszBandsAtScale( scale );
+			for ( int b = 0; b < c.length; b++ )
 			{
-				double[] tmp = c[b].clone();
-				for (int i = 0; i < tmp.length; i++)
-					tmp[i] = tmp[i]*tmp[i];
-				Arrays.sort(tmp);
-				double threshold = tmp[(int)(tmp.length*0.75)];
-				for (int i = 0; i < tmp.length; i++)
-					if (c[b][i]*c[b][i] < threshold)
-						c[b][i] = 0;
+				final double[] tmp = c[ b ].clone();
+				for ( int i = 0; i < tmp.length; i++ )
+					tmp[ i ] = tmp[ i ] * tmp[ i ];
+				Arrays.sort( tmp );
+				final double threshold = tmp[ ( int ) ( tmp.length * 0.75 ) ];
+				for ( int i = 0; i < tmp.length; i++ )
+					if ( c[ b ][ i ] * c[ b ][ i ] < threshold )
+						c[ b ][ i ] = 0;
 			}
 		}
 		// reconstruct image from coefficients
-		Sequence recSeq = new Sequence();
-		double[] reconstructedImage = config.multiscaleRieszSynthesisInFourier(coefficients, width, height);
-		double minV = reconstructedImage[0];
-		for (int i = 0; i < reconstructedImage.length; i++)
-			if (reconstructedImage[i] < minV)
-				minV = reconstructedImage[i];
-		for (int i = 0; i < reconstructedImage.length; i++)
-			reconstructedImage[i] -= minV;
-		recSeq.addImage(0, new IcyBufferedImage(width, height, reconstructedImage));
-		return recSeq;	
+		final Sequence recSeq = new Sequence();
+		final double[] reconstructedImage = config.multiscaleRieszSynthesisInFourier( coefficients, width, height );
+		double minV = reconstructedImage[ 0 ];
+		for ( int i = 0; i < reconstructedImage.length; i++ )
+			if ( reconstructedImage[ i ] < minV )
+				minV = reconstructedImage[ i ];
+		for ( int i = 0; i < reconstructedImage.length; i++ )
+			reconstructedImage[ i ] -= minV;
+		recSeq.addImage( 0, new IcyBufferedImage( width, height, reconstructedImage ) );
+		return recSeq;
 	}
 
-	Sequence getFilteredProjectionSequence(Sequence seq)
+	Sequence getFilteredProjectionSequence( final Sequence seq )
 	{
-		// compute pixelwise variance over time windows of length 50 and keep the maximum value
+		// compute pixelwise variance over time windows of length 50 and keep
+		// the maximum value
 		Sequence projectionSequence = null;
-		if (seq != null)
+		if ( seq != null )
 		{
-			double[] maxVar = new double[seq.getSizeX()*seq.getSizeY()];
-			double[] sum = new double[seq.getSizeX()*seq.getSizeY()];
-			double[] sumSq = new double[seq.getSizeX()*seq.getSizeY()];
+			final double[] maxVar = new double[ seq.getSizeX() * seq.getSizeY() ];
+			final double[] sum = new double[ seq.getSizeX() * seq.getSizeY() ];
+			final double[] sumSq = new double[ seq.getSizeX() * seq.getSizeY() ];
 
-			int windowLength = 20;
-			for (int t1 = 0; t1 < seq.getSizeT(); t1+= (int) (windowLength/2))
+			final int windowLength = 20;
+			for ( int t1 = 0; t1 < seq.getSizeT(); t1 += windowLength / 2 )
 			{
-				for (int i = 0; i < sum.length; i++)
+				for ( int i = 0; i < sum.length; i++ )
 				{
-					sum[i] = 0;
-					sumSq[i] = 0;
+					sum[ i ] = 0;
+					sumSq[ i ] = 0;
 				}
 				int t2 = t1 + windowLength;
-				if (t2 > seq.getSizeT())
+				if ( t2 > seq.getSizeT() )
 					t2 = seq.getSizeT();
-				for (int t = t1; t < t2; t++)
+				for ( int t = t1; t < t2; t++ )
 				{
-					double[] image = (double[]) ArrayUtil.arrayToDoubleArray(seq.getImage(t, 0, 0).getDataXY(0), seq.isSignedDataType());
-					for (int i = 0; i < image.length; i++)
+					final double[] image = ( double[] ) ArrayUtil.arrayToDoubleArray( seq.getImage( t, 0, 0 ).getDataXY( 0 ), seq.isSignedDataType() );
+					for ( int i = 0; i < image.length; i++ )
 					{
-						sum[i] += image[i];
-						sumSq[i] += image[i]*image[i];
+						sum[ i ] += image[ i ];
+						sumSq[ i ] += image[ i ] * image[ i ];
 					}
 				}
-				for (int i = 0; i < sum.length; i++)
+				for ( int i = 0; i < sum.length; i++ )
 				{
-					double var = sumSq[i]/(t2-t1) - sum[i]*sum[i]/((t2-t1)*(t2-t1));
-					if (var > maxVar[i])
-						maxVar[i] = var;
+					final double var = sumSq[ i ] / ( t2 - t1 ) - sum[ i ] * sum[ i ] / ( ( t2 - t1 ) * ( t2 - t1 ) );
+					if ( var > maxVar[ i ] )
+						maxVar[ i ] = var;
 				}
 			}
-			for (int i = 0; i < maxVar.length; i++)
+			for ( int i = 0; i < maxVar.length; i++ )
 			{
-				maxVar[i] = Math.sqrt(maxVar[i]);
+				maxVar[ i ] = Math.sqrt( maxVar[ i ] );
 			}
-			projectionSequence = new Sequence("Filtered projection_"+seq.getName());
-			projectionSequence.addImage(0, new IcyBufferedImage(seq.getSizeX(), seq.getSizeY(), maxVar));
+			projectionSequence = new Sequence( "Filtered projection_" + seq.getName() );
+			projectionSequence.addImage( 0, new IcyBufferedImage( seq.getSizeX(), seq.getSizeY(), maxVar ) );
 		}
 		return projectionSequence;
 	}
 
 	@Override
-	public void refreshPath(PathEvent event, InteractiveMultipleDjikstraTracingESC source, double[][] path) {
-		if (event == PathEvent.FINAL_PATH)
+	public void refreshPath( final PathEvent event, final InteractiveMultipleDjikstraTracingESC source, final double[][] path )
+	{
+		if ( event == PathEvent.FINAL_PATH )
 		{
 			// convert to a ROI in the original sequence
-			ArrayList<double[][]> paths = source.getOptimalPathCopy();
-			ROI roi = Util.convertPathToROI(selectedSequence, paths);
+			final ArrayList< double[][] > paths = source.getOptimalPathCopy();
+			final ROI roi = Util.convertPathToROI( selectedSequence, paths );
 			int cntROI = 1;
 			boolean notFound = false;
 			String name = "Path_" + cntROI;
-			while(!notFound)
+			while ( !notFound )
 			{
 				notFound = true;
 				name = "Path_" + cntROI;
-				for (ROI r:selectedSequence.getROIs())
+				for ( final ROI r : selectedSequence.getROIs() )
 				{
-					if (r.getName().equals(name))
+					if ( r.getName().equals( name ) )
 						notFound = false;
 				}
-				cntROI ++;
+				cntROI++;
 			}
-			roi.setName(name);
-			selectedSequence.addROI(roi);
+			roi.setName( name );
+			selectedSequence.addROI( roi );
 		}
 	}
 
 	protected void extractKymographs()
 	{
-		if (selectedSequence != null)
+		if ( selectedSequence != null )
 		{
 			double diskRadius = 2;
-			try {
-				diskRadius = diskFormat.parse(diskRadiusField.getText()).doubleValue();
-			} catch (ParseException e) {
+			try
+			{
+				diskRadius = diskFormat.parse( diskRadiusField.getText() ).doubleValue();
+			}
+			catch ( final ParseException e )
+			{
 				e.printStackTrace();
 				return;
 			}
-			diskRadius = Math.max(1e-6, diskRadius);
-			ROItoKymograph extractor = new ROItoKymograph(diskRadius, 1);
-			for (ROI2D roi:selectedSequence.getROI2Ds())
+			diskRadius = Math.max( 1e-6, diskRadius );
+			final ROItoKymograph extractor = new ROItoKymograph( diskRadius, 1 );
+			for ( final ROI2D roi : selectedSequence.getROI2Ds() )
 			{
-				if (roi instanceof ROI2DShape)
+				if ( roi instanceof ROI2DShape )
 				{
-					//					ArrayList<double[]> samplingPositions = extractor.computeSamplingPositions(selectedSequence, (ROI2DShape) roi, true);
-					if (separateAnteroRetroBox.isSelected())
+					// ArrayList<double[]> samplingPositions =
+					// extractor.computeSamplingPositions(selectedSequence,
+					// (ROI2DShape) roi, true);
+					if ( separateAnteroRetroBox.isSelected() )
 					{
-						//						Sequence[] kymographs = extractor.getAnteroRetroKymographSequenceFromDisks(selectedSequence, samplingPositions);
+						// Sequence[] kymographs =
+						// extractor.getAnteroRetroKymographSequenceFromDisks(selectedSequence,
+						// samplingPositions);
 
 						Sequence[] kymographs = null;
-						//						if (roi instanceof SplineROI)
-						//						{
-						//							SplineROI roiSpline = (SplineROI) roi;
-						//							kymographs = extractor.getAnteroRetroKymographSequence(selectedSequence, roiSpline.length, roiSpline.xSpline, roiSpline.ySpline);		
-						//						}
-						CubicSmoothingSpline xSpline = Util.getXsplineFromROI((ROI2DShape) roi);
-						CubicSmoothingSpline ySpline = Util.getYsplineFromROI((ROI2DShape) roi);
-						double length = Util.getSplineLength((ROI2DShape) roi);
-						kymographs = extractor.getAnteroRetroKymographSequence(selectedSequence, length, xSpline, ySpline);
+						// if (roi instanceof SplineROI)
+						// {
+						// SplineROI roiSpline = (SplineROI) roi;
+						// kymographs =
+						// extractor.getAnteroRetroKymographSequence(selectedSequence,
+						// roiSpline.length, roiSpline.xSpline,
+						// roiSpline.ySpline);
+						// }
+						final CubicSmoothingSpline xSpline = Util.getXsplineFromROI( ( ROI2DShape ) roi );
+						final CubicSmoothingSpline ySpline = Util.getYsplineFromROI( ( ROI2DShape ) roi );
+						final double length = Util.getSplineLength( ( ROI2DShape ) roi );
+						kymographs = extractor.getAnteroRetroKymographSequence( selectedSequence, length, xSpline, ySpline );
 
-						Sequence kymo = kymographs[0];
-						kymo.setName(roi.getName()+"_kymograph");
-						Icy.getMainInterface().addSequence(kymo);
+						final Sequence kymo = kymographs[ 0 ];
+						kymo.setName( roi.getName() + "_kymograph" );
+						Icy.getMainInterface().addSequence( kymo );
 
-						Sequence anteroKymo = kymographs[1];
-						anteroKymo.setName(roi.getName()+"_anteroKymograph");
-						Icy.getMainInterface().addSequence(anteroKymo);
+						final Sequence anteroKymo = kymographs[ 1 ];
+						anteroKymo.setName( roi.getName() + "_anteroKymograph" );
+						Icy.getMainInterface().addSequence( anteroKymo );
 
-						Sequence retroKymo = kymographs[2];
-						retroKymo.setName(roi.getName()+"_retroKymograph");
-						Icy.getMainInterface().addSequence(retroKymo);
-						KymographExtractionResult result = new KymographExtractionResult();
+						final Sequence retroKymo = kymographs[ 2 ];
+						retroKymo.setName( roi.getName() + "_retroKymograph" );
+						Icy.getMainInterface().addSequence( retroKymo );
+						final KymographExtractionResult result = new KymographExtractionResult();
 						result.roi = roi;
-						result.setKymograph(kymo);
+						result.setKymograph( kymo );
 						result.anterogradeRetrogradeSeparation = true;
 						result.sourceSequence = selectedSequence;
-						result.setAnterogradeKymograph(anteroKymo);
-						result.setRetrogradeKymograph(retroKymo);
+						result.setAnterogradeKymograph( anteroKymo );
+						result.setRetrogradeKymograph( retroKymo );
 						result.samplingPositions = extractor.samplingPositions;
-						Icy.getMainInterface().getSwimmingPool().add(new SwimmingObject(result));
+						Icy.getMainInterface().getSwimmingPool().add( new SwimmingObject( result ) );
 					}
 					else
 					{
 						Sequence kymograph = null;
-						CubicSmoothingSpline xSpline = Util.getXsplineFromROI((ROI2DShape) roi);
-						CubicSmoothingSpline ySpline = Util.getYsplineFromROI((ROI2DShape) roi);
-						double length = Util.getSplineLength((ROI2DShape) roi);
-						kymograph = extractor.getKymographSequence(selectedSequence, length, xSpline, ySpline);
+						final CubicSmoothingSpline xSpline = Util.getXsplineFromROI( ( ROI2DShape ) roi );
+						final CubicSmoothingSpline ySpline = Util.getYsplineFromROI( ( ROI2DShape ) roi );
+						final double length = Util.getSplineLength( ( ROI2DShape ) roi );
+						kymograph = extractor.getKymographSequence( selectedSequence, length, xSpline, ySpline );
 
-						kymograph.setName(roi.getName()+"_kymograph");
-						Icy.getMainInterface().addSequence(kymograph);
-						KymographExtractionResult result = new KymographExtractionResult();
+						kymograph.setName( roi.getName() + "_kymograph" );
+						Icy.getMainInterface().addSequence( kymograph );
+						final KymographExtractionResult result = new KymographExtractionResult();
 						result.roi = roi;
-						result.setKymograph(kymograph);
+						result.setKymograph( kymograph );
 						result.anterogradeRetrogradeSeparation = false;
 						result.sourceSequence = selectedSequence;
 						result.samplingPositions = extractor.samplingPositions;
-						Icy.getMainInterface().getSwimmingPool().add(new SwimmingObject(result));
+						Icy.getMainInterface().getSwimmingPool().add( new SwimmingObject( result ) );
 					}
 				}
 			}
 		}
 	}
 
-	//	@Override
-	//	public void refreshPath(
-	//			PathEvent event,
-	//			InteractiveMultipleDjikstraTracing source,
-	//			double[][] path) {
-	//		if (event == PathEvent.FINAL_PATH)
-	//		{
-	//			// convert to a ROI in the original sequence
-	//			ArrayList<double[][]> paths = source.getOptimalPathCopy();
-	//			ROI roi = Util.convertPathToROI(selectedSequence, paths);
-	//			int cntROI = 1;
-	//			boolean notFound = false;
-	//			String name = "Path_" + cntROI;
-	//			while(!notFound)
-	//			{
-	//				notFound = true;
-	//				name = "Path_" + cntROI;
-	//				for (ROI r:selectedSequence.getROIs())
-	//				{
-	//					if (r.getName().equals(name))
-	//						notFound = false;
-	//				}
-	//				cntROI ++;
-	//			}
-	//			roi.setName(name);
-	//			selectedSequence.addROI(roi);
-	//		}		
-	//	}
-
+	// @Override
+	// public void refreshPath(
+	// PathEvent event,
+	// InteractiveMultipleDjikstraTracing source,
+	// double[][] path) {
+	// if (event == PathEvent.FINAL_PATH)
+	// {
+	// // convert to a ROI in the original sequence
+	// ArrayList<double[][]> paths = source.getOptimalPathCopy();
+	// ROI roi = Util.convertPathToROI(selectedSequence, paths);
+	// int cntROI = 1;
+	// boolean notFound = false;
+	// String name = "Path_" + cntROI;
+	// while(!notFound)
+	// {
+	// notFound = true;
+	// name = "Path_" + cntROI;
+	// for (ROI r:selectedSequence.getROIs())
+	// {
+	// if (r.getName().equals(name))
+	// notFound = false;
+	// }
+	// cntROI ++;
+	// }
+	// roi.setName(name);
+	// selectedSequence.addROI(roi);
+	// }
+	// }
 
 	class ControlPointPainter extends Overlay
 	{
-		ArrayList<double[]> points;
+		ArrayList< double[] > points;
 
-		public ControlPointPainter(ArrayList<double[]> points) {
-			super("Control point painter");
+		public ControlPointPainter( final ArrayList< double[] > points )
+		{
+			super( "Control point painter" );
 			this.points = points;
 		}
 
 		@Override
-		public void paint(Graphics2D g, Sequence sequence, IcyCanvas canvas)
+		public void paint( final Graphics2D g, final Sequence sequence, final IcyCanvas canvas )
 		{
-			if (points != null)
+			if ( points != null )
 			{
-				for (double[] p:points)
+				for ( final double[] p : points )
 				{
-					g.setColor(Color.red);
-					g.setStroke(new BasicStroke(1f));
-					g.draw(new Line2D.Double(p[0] - 2f + 0.5, p[1] + 0.5, p[0] + 2f + 0.5, p[1] + 0.5));
-					g.draw(new Line2D.Double(p[0] + 0.5, p[1] - 2f + 0.5, p[0] + 0.5, p[1] + 2f + 0.5));
+					g.setColor( Color.red );
+					g.setStroke( new BasicStroke( 1f ) );
+					g.draw( new Line2D.Double( p[ 0 ] - 2f + 0.5, p[ 1 ] + 0.5, p[ 0 ] + 2f + 0.5, p[ 1 ] + 0.5 ) );
+					g.draw( new Line2D.Double( p[ 0 ] + 0.5, p[ 1 ] - 2f + 0.5, p[ 0 ] + 0.5, p[ 1 ] + 2f + 0.5 ) );
 				}
 			}
 		}
