@@ -2,6 +2,9 @@
 
 Icy Kymograph tracker, by Nicolas Chenouard.
 
+Check the Icy website for up to date documentation of the version distributed in Icy.
+http://icy.bioimageanalysis.org/plugin/KymographTracker
+
 This plugin allows the extraction of the kymograph representation of pixel intensity evolution through time and along a defined spatial path. Different utilities are embedded to define the extraction curve.
 
 Multiple paths can be used for the same image sequence.
