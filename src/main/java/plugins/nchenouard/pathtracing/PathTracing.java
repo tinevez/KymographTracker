@@ -284,7 +284,7 @@ public class PathTracing extends PluginActionable
 		}
 
 		@Override
-		public void refreshPath( final PathEvent event, final InteractiveMultipleDjikstraTracing source, final double[][] path )
+		public void refreshPath( final PathEvent event, final Object source, final double[][] path )
 		{
 			if ( event == PathEvent.TEMPORARY_PATH && drawTemporaryPath )
 			{
@@ -314,34 +314,6 @@ public class PathTracing extends PluginActionable
 			}
 			else
 				resetChart();
-		}
-
-		@Override
-		public void refreshPath( final PathEvent event,
-				final InteractiveDjikstraTracing source, final double[][] path )
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void refreshPath(
-				final PathEvent event,
-				final InteractiveMultipleDjikstraTracingESC interactiveMultipleDjikstraTracingESC,
-				final double[][] path )
-		{
-			if ( event == PathEvent.TEMPORARY_PATH && drawTemporaryPath )
-			{
-				displayIntensityPath( path );
-			}
-			else if ( event == PathEvent.FINAL_PATH && drawFinalPath )
-			{
-				displayIntensityPath( path );
-			}
-			else if ( event == PathEvent.RESET_PATH )
-			{
-				resetChart();
-			}
 		}
 	}
 
