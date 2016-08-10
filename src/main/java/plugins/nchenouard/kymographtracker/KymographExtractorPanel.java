@@ -43,6 +43,7 @@ import plugins.kernel.roi.roi2d.ROI2DShape;
 import plugins.nchenouard.isotropicwavelets.IsotropicWaveletType;
 import plugins.nchenouard.kymographtracker.spline.CubicSmoothingSpline;
 import plugins.nchenouard.pathtracing.InteractiveMultipleDjikstraTracingESC;
+import plugins.nchenouard.pathtracing.InteractiveMultipleTracing;
 import plugins.nchenouard.pathtracing.PathEvent;
 import plugins.nchenouard.pathtracing.PathListener;
 import plugins.nchenouard.rieszwavelets.HarmonicTypes;
@@ -570,12 +571,13 @@ class KymographExtractorPanel extends ActionPanel implements PathListener
 	}
 
 	@Override
-	public void refreshPath( final PathEvent event, final InteractiveMultipleDjikstraTracingESC source, final double[][] path )
+	public void refreshPath( final PathEvent event, final Object source, final double[][] path )
 	{
 		if ( event == PathEvent.FINAL_PATH )
 		{
 			// convert to a ROI in the original sequence
-			final ArrayList< double[][] > paths = source.getOptimalPathCopy();
+			final InteractiveMultipleTracing tracer = ( InteractiveMultipleTracing ) source;
+			final ArrayList< double[][] > paths = tracer.getOptimalPathCopy();
 			final ROI roi = Util.convertPathToROI( selectedSequence, paths );
 			int cntROI = 1;
 			boolean notFound = false;

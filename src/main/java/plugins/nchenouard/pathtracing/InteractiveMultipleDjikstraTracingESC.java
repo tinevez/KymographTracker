@@ -1,14 +1,5 @@
 package plugins.nchenouard.pathtracing;
 
-import icy.canvas.IcyCanvas;
-import icy.gui.frame.progress.AnnounceFrame;
-import icy.image.IcyBufferedImage;
-import icy.painter.Overlay;
-import icy.painter.OverlayEvent;
-import icy.painter.OverlayEvent.OverlayEventType;
-import icy.sequence.Sequence;
-import icy.type.collection.array.ArrayUtil;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -25,7 +16,16 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class InteractiveMultipleDjikstraTracingESC extends Overlay
+import icy.canvas.IcyCanvas;
+import icy.gui.frame.progress.AnnounceFrame;
+import icy.image.IcyBufferedImage;
+import icy.painter.Overlay;
+import icy.painter.OverlayEvent;
+import icy.painter.OverlayEvent.OverlayEventType;
+import icy.sequence.Sequence;
+import icy.type.collection.array.ArrayUtil;
+
+public class InteractiveMultipleDjikstraTracingESC extends Overlay implements InteractiveMultipleTracing
 {
 	//TODO: modify cost to account for the level of directionality of each pixel
 
@@ -70,12 +70,12 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 		RESET, FIRST_CLICKED, SECOND_CLICKED, ESC
 	}
 
-	public InteractiveMultipleDjikstraTracingESC(Sequence seq) throws IllegalArgumentException
+	public InteractiveMultipleDjikstraTracingESC(final Sequence seq) throws IllegalArgumentException
 	{
 		this(seq, 0.0001, false);
 	}
 
-	public InteractiveMultipleDjikstraTracingESC(Sequence seq, double alpha, boolean verticalPath) throws IllegalArgumentException
+	public InteractiveMultipleDjikstraTracingESC(final Sequence seq, final double alpha, final boolean verticalPath) throws IllegalArgumentException
 	{
 		super("Path tracer");
 		this.verticalPath = verticalPath;
@@ -94,8 +94,8 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 				this.alpha = alpha;
 			width = seq.getWidth();
 			height = seq.getHeight();
-			int component = 0;
-			IcyBufferedImage image = seq.getFirstImage();
+			final int component = 0;
+			final IcyBufferedImage image = seq.getFirstImage();
 			dataSaveLock.lock();
 			dataSave = (double[])ArrayUtil.arrayToDoubleArray(image.getDataXY(component), image.isSignedDataType() );
 			maxIntensity = 0;
@@ -105,7 +105,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 			dataSaveLock.unlock();
 			pathListenerList = new ArrayList<PathListener>();
 			
-			Runnable stopTracerThr = new Runnable() {				
+			final Runnable stopTracerThr = new Runnable() {				
 				@Override
 				public void run() {
 					stopTracing();
@@ -128,7 +128,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 			announceFrame.close();
 		state = DrawingState.RESET;
 		pathThreadListLock.lock();
-		for (Thread thr:pathThreadList)
+		for (final Thread thr:pathThreadList)
 			((StoppableThread)thr).stopThread();
 		pathThreadListLock.unlock();
 		disable();
@@ -137,7 +137,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 	/**
 	 * Add a listener to the changes of path
 	 * */
-	public void addPathLister(PathListener listener)
+	public void addPathLister(final PathListener listener)
 	{
 		pathListenerList.add(listener);
 	}
@@ -145,19 +145,19 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 	/**
 	 * Remove a listener to the changes of path
 	 * */
-	public void removePathLister(PathListener listener)
+	public void removePathLister(final PathListener listener)
 	{
 		pathListenerList.remove(listener);
 	}
 
 	@Override
-	public void paint(Graphics2D g2d, Sequence sequence, IcyCanvas canvas)
+	public void paint(final Graphics2D g2d, final Sequence sequence, final IcyCanvas canvas)
 	{
-		Color tempLineColor = Color.YELLOW;
-		Color lineColor = Color.RED;
-		Color extremityColor = Color.BLUE;
-		float shiftDrawX  = 0.5f;
-		float shiftDrawY  = 0.5f;
+		final Color tempLineColor = Color.YELLOW;
+		final Color lineColor = Color.RED;
+		final Color extremityColor = Color.BLUE;
+		final float shiftDrawX  = 0.5f;
+		final float shiftDrawY  = 0.5f;
 
 		if (isEnabled && !paused)
 		{
@@ -172,7 +172,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 							if(cnt > 0)
 							{
 								g2d.setColor(tempLineColor);
-								Line2D.Float l = new Line2D.Float(((int)optimalPath[cnt][0]) + shiftDrawX, ((int)optimalPath[cnt][1]) + shiftDrawY, ((int)optimalPath[cnt-1][0]) + shiftDrawX, ((int)optimalPath[cnt-1][1]) + shiftDrawY);
+								final Line2D.Float l = new Line2D.Float(((int)optimalPath[cnt][0]) + shiftDrawX, ((int)optimalPath[cnt][1]) + shiftDrawY, ((int)optimalPath[cnt-1][0]) + shiftDrawX, ((int)optimalPath[cnt-1][1]) + shiftDrawY);
 								g2d.draw(l);
 							}
 						}
@@ -183,20 +183,20 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 				{
 					for (int i = 0; i < optimalPathList.size(); i++)
 					{
-						double[][] path = optimalPathList.get(i);
+						final double[][] path = optimalPathList.get(i);
 						for (int cnt = 0; cnt < path.length; cnt++)
 						{
 							if(cnt > 0)
 							{
 								g2d.setColor(lineColor);
-								Line2D.Float l = new Line2D.Float(((int)path[cnt][0]) + shiftDrawX, ((int)path[cnt][1]) + shiftDrawY, ((int)path[cnt-1][0]) + shiftDrawX, ((int)path[cnt-1][1]) + shiftDrawY);
+								final Line2D.Float l = new Line2D.Float(((int)path[cnt][0]) + shiftDrawX, ((int)path[cnt][1]) + shiftDrawY, ((int)path[cnt-1][0]) + shiftDrawX, ((int)path[cnt-1][1]) + shiftDrawY);
 								g2d.draw(l);
 							}
 						}
 					}
 				}
 			}
-			Point p = new Point((int)canvas.getMouseImagePosX(), (int)canvas.getMouseImagePosY());
+			final Point p = new Point((int)canvas.getMouseImagePosX(), (int)canvas.getMouseImagePosY());
 			if ( p!=null )
 			{
 				g2d.setStroke(new BasicStroke(0.5f));
@@ -210,21 +210,21 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e, Point2D imagePoint, IcyCanvas canvas) {}
+	public void mousePressed(final MouseEvent e, final Point2D imagePoint, final IcyCanvas canvas) {}
 
 	@Override
-	public void mouseReleased(MouseEvent e, Point2D imagePoint, IcyCanvas canvas) {}
+	public void mouseReleased(final MouseEvent e, final Point2D imagePoint, final IcyCanvas canvas) {}
 
 
 	Thread storePathThread;
 
-	private void finalizePath(int xF, int yF, boolean addNewPathThread)
+	private void finalizePath(final int xF, final int yF, final boolean addNewPathThread)
 	{
 		if (mapReady)
 		{
 			// stop all the path computation threads and launch a new one for the clicked point
 			pathThreadListLock.lock();
-			for (Thread thr:pathThreadList)
+			for (final Thread thr:pathThreadList)
 				((StoppableThread)thr).stopThread();
 			pathThreadListLock.unlock();
 			initLock.lock();
@@ -240,7 +240,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 		else // wait the map to compute the pixel of interest
 		{
 			pathThreadListLock.lock();
-			for (Thread thr:pathThreadList)
+			for (final Thread thr:pathThreadList)
 				((StoppableThread)thr).stopThread();
 			pathThreadListLock.unlock();
 			initLock.lock();
@@ -255,16 +255,16 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 		}
 	}
 
-	private void initNewMapThread(int xi, int yi)
+	private void initNewMapThread(final int xi, final int yi)
 	{
 		// stop the map and path computing threads as there is a new initial point
 		mapThreadListLock.lock();
-		for (Thread t:mapThreadList)
+		for (final Thread t:mapThreadList)
 			((StoppableThread)t).stopThread();
 		mapThreadListLock.unlock();
 
 		pathThreadListLock.lock();
-		for (Thread t:pathThreadList)
+		for (final Thread t:pathThreadList)
 			((StoppableThread)t).stopThread();
 		pathThreadListLock.unlock();
 
@@ -287,7 +287,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 	}
 
 	@Override
-	public void mouseClick(MouseEvent e, Point2D imagePoint, IcyCanvas canvas) {
+	public void mouseClick(final MouseEvent e, final Point2D imagePoint, final IcyCanvas canvas) {
 		if (isEnabled && !paused)
 		{
 			switch (state)
@@ -296,8 +296,8 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 			case ESC:
 			{
 				clearOptimalPath();
-				int xi = (int) Math.round(imagePoint.getX());
-				int yi = (int) Math.round(imagePoint.getY());
+				final int xi = (int) Math.round(imagePoint.getX());
+				final int yi = (int) Math.round(imagePoint.getY());
 				if (xi >= 0 && xi < width && yi >= 0 && yi < height)
 				{
 					initNewMapThread(xi, yi);
@@ -308,8 +308,8 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 			case FIRST_CLICKED:
 			case SECOND_CLICKED:
 			{
-				int xF = (int) Math.round(imagePoint.getX());
-				int yF = (int) Math.round(imagePoint.getY());
+				final int xF = (int) Math.round(imagePoint.getX());
+				final int yF = (int) Math.round(imagePoint.getY());
 				if (xF >= 0 && xF < width && yF >= 0 && yF < height)
 				{
 					paused = true;
@@ -322,7 +322,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 	}
 
 	@Override
-	public void mouseMove(MouseEvent e, Point2D imagePoint, IcyCanvas canvas)
+	public void mouseMove(final MouseEvent e, final Point2D imagePoint, final IcyCanvas canvas)
 	{
 		if (isEnabled && !paused)
 			if (state == DrawingState.FIRST_CLICKED || state == DrawingState.SECOND_CLICKED)
@@ -330,11 +330,11 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 				if (mapReady)
 				{
 					pathThreadListLock.lock();
-					for (Thread t:pathThreadList)
+					for (final Thread t:pathThreadList)
 						((StoppableThread)t).stopThread();
 					//pathThreadListLock.unlock();
-					int xF = (int)Math.round(imagePoint.getX());
-					int yF = (int)Math.round(imagePoint.getY());
+					final int xF = (int)Math.round(imagePoint.getX());
+					final int yF = (int)Math.round(imagePoint.getY());
 					if (xF >= 0 && xF < width && yF >= 0 && yF < height)
 					{
 						if (!verticalPath || yF > yInit)
@@ -342,7 +342,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 							xFinal = xF;
 							yFinal = yF;
 							initLock.lock();
-							Thread thr = new ComputePathThread(xInit, yInit, xFinal, yFinal);
+							final Thread thr = new ComputePathThread(xInit, yInit, xFinal, yFinal);
 							initLock.unlock();
 							//pathThreadListLock.lock();
 							pathThreadList.add(thr);
@@ -355,17 +355,17 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 				else // wait the map to compute the pixel of interest
 				{
 					pathThreadListLock.lock();
-					for (Thread t:pathThreadList)
+					for (final Thread t:pathThreadList)
 						((StoppableThread)t).stopThread();
 					//					pathThreadListLock.unlock();
-					int xF = (int)Math.round(imagePoint.getX());
-					int yF = (int)Math.round(imagePoint.getY());
+					final int xF = (int)Math.round(imagePoint.getX());
+					final int yF = (int)Math.round(imagePoint.getY());
 					if (xF >= 0 && xF < width && yF >= 0 && yF < height)
 					{
 						xFinal = xF;
 						yFinal = yF;
 						initLock.lock();
-						Thread thr = new ComputePathThreadWaiting(xInit, yInit, xFinal, yFinal);
+						final Thread thr = new ComputePathThreadWaiting(xInit, yInit, xFinal, yFinal);
 						initLock.unlock();
 						//pathThreadListLock.lock();
 						pathThreadList.add(thr);
@@ -379,13 +379,13 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 				seq.overlayChanged(this);
 	}
 	@Override
-	public void mouseDrag(MouseEvent e, Point2D imagePoint, IcyCanvas canvas) {}
+	public void mouseDrag(final MouseEvent e, final Point2D imagePoint, final IcyCanvas canvas) {}
 
 	@Override
-	public void keyPressed(KeyEvent e, Point2D imagePoint, IcyCanvas canvas) {}
+	public void keyPressed(final KeyEvent e, final Point2D imagePoint, final IcyCanvas canvas) {}
 
 	@Override
-	public void keyReleased(KeyEvent e, Point2D imagePoint, IcyCanvas canvas)
+	public void keyReleased(final KeyEvent e, final Point2D imagePoint, final IcyCanvas canvas)
 	{
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
 		{
@@ -402,7 +402,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 		}
 	}
 
-	public Number getIntensityAt(double x, double y) {
+	public Number getIntensityAt(final double x, final double y) {
 		if (dataSave!=null && x>=0 && x<width && y >=0 && y < height)
 		{
 			return dataSave[(int)Math.round(x)+(int)Math.round(y)*width];
@@ -411,11 +411,12 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 			return -1;
 	}
 
+	@Override
 	public ArrayList<double[][]> getOptimalPathCopy()
 	{
-		ArrayList<double[][]> copy = new ArrayList<double[][]>();
+		final ArrayList<double[][]> copy = new ArrayList<double[][]>();
 		pathLock.lock();
-		for (double[][] path:optimalPathList)
+		for (final double[][] path:optimalPathList)
 			copy.add(path.clone());
 		pathLock.unlock();
 		return copy;
@@ -463,7 +464,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 
 		boolean run = true;
 
-		public ComputeMapThread(int xInit, int yInit)
+		public ComputeMapThread(final int xInit, final int yInit)
 		{
 			this.xInit = xInit;
 			this.yInit = yInit;
@@ -473,9 +474,10 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 			dataSaveLock.unlock();
 		}
 
+		@Override
 		abstract public void run();
 		
-		public double dist(double i1, double i2)
+		public double dist(final double i1, final double i2)
 		{
 			//return Math.abs(i1-i2);
 			//int cost = 0;
@@ -487,11 +489,11 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 			return maxIntensity/(i2+alpha);
 		}
 
-		protected void test(double currentDist, double refI, int currentIdx, int idx)
+		protected void test(final double currentDist, final double refI, final int currentIdx, final int idx)
 		{
 			if (!visited[idx])
 			{
-				double d = currentDist + dist(refI, data[idx]);
+				final double d = currentDist + dist(refI, data[idx]);
 				if (d < dist[idx])
 				{
 					dist[idx] = d;
@@ -509,7 +511,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 	
 	class ComputeMapThreadBidirectional extends ComputeMapThread
 	{
-		public ComputeMapThreadBidirectional(int xInit, int yInit)
+		public ComputeMapThreadBidirectional(final int xInit, final int yInit)
 		{
 			super(xInit, yInit);
 		}
@@ -522,7 +524,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 				dist[u] = Double.MAX_VALUE;
 				//visited[u] = false;
 			}
-			int idxInit = yInit*width+xInit;
+			final int idxInit = yInit*width+xInit;
 
 			dist[idxInit] = 0;
 
@@ -534,8 +536,8 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 
 			while (!stop && run)
 			{
-				double ival = data[currentIdx];
-				double currentDist = dist[currentIdx];
+				final double ival = data[currentIdx];
+				final double currentDist = dist[currentIdx];
 
 				if (currentX > 0)
 				{
@@ -615,7 +617,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 				else
 				{
 					currentIdx = minIdx;
-					currentY = (int)(currentIdx/width);
+					currentY = currentIdx/width;
 					currentX = currentIdx - width*currentY;
 				}
 			}
@@ -635,7 +637,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 	
 	class ComputeMapThreadToTop extends ComputeMapThread
 	{
-		public ComputeMapThreadToTop(int xInit, int yInit)
+		public ComputeMapThreadToTop(final int xInit, final int yInit)
 		{
 			super(xInit, yInit);
 		}
@@ -645,7 +647,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 		{	
 			for (int u = 0; u < dist.length; u++)
 				dist[u] = Double.MAX_VALUE;
-			int idxInit = yInit*width + xInit;
+			final int idxInit = yInit*width + xInit;
 
 			dist[idxInit] = 0;
 
@@ -657,8 +659,8 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 
 			while (!stop && run)
 			{
-				double ival = data[currentIdx];
-				double currentDist = dist[currentIdx];
+				final double ival = data[currentIdx];
+				final double currentDist = dist[currentIdx];
 
 				if (currentX > 0)
 				{
@@ -720,7 +722,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 				else
 				{
 					currentIdx = minIdx;
-					currentY = (int)(currentIdx/width);
+					currentY = currentIdx/width;
 					currentX = currentIdx - width*currentY;
 				}
 			}
@@ -743,7 +745,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 
 		boolean addNewMapThread = false;
 
-		public ComputeFinalPathThread(int xInit, int yInit, int xFinal, int yFinal, boolean addNewPathThread) {
+		public ComputeFinalPathThread(final int xInit, final int yInit, final int xFinal, final int yFinal, final boolean addNewPathThread) {
 			super(xInit, yInit, xFinal, yFinal);
 			this.addNewMapThread = addNewPathThread;
 		}
@@ -778,7 +780,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 
 		boolean run = true;
 
-		public ComputePathThread(int xInit, int yInit, int xFinal, int yFinal)
+		public ComputePathThread(final int xInit, final int yInit, final int xFinal, final int yFinal)
 		{
 			this.xInit = xInit;
 			this.yInit = yInit;
@@ -791,14 +793,14 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 		{
 
 			distanceMapLock.lock();
-			int[] prev = new int[pathMap.length];
+			final int[] prev = new int[pathMap.length];
 			System.arraycopy(pathMap, 0, prev, 0, prev.length);
 			distanceMapLock.unlock();
-			int width = seq.getWidth();
-			int idxInit = xInit + yInit*width;
-			int idxFinal = xFinal + yFinal*width;
+			final int width = seq.getWidth();
+			final int idxInit = xInit + yInit*width;
+			final int idxFinal = xFinal + yFinal*width;
 
-			ArrayList<Integer> path = new ArrayList<Integer>();
+			final ArrayList<Integer> path = new ArrayList<Integer>();
 			int idx = idxFinal;
 			path.add(new Integer(idxFinal));
 			while(idx != idxInit && !isInterrupted() && run)
@@ -806,12 +808,12 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 				idx = prev[idx];
 				path.add(new Integer(idx));
 			}
-			int pathLength = path.size();
-			double[][] pathTab = new double[pathLength][2];
+			final int pathLength = path.size();
+			final double[][] pathTab = new double[pathLength][2];
 			for (int cnt = 0; cnt<pathLength; cnt++)
 			{
-				int tmp = path.get(pathLength-cnt-1);
-				pathTab[cnt] = new double[]{tmp%width,(int)(tmp/width)};
+				final int tmp = path.get(pathLength-cnt-1);
+				pathTab[cnt] = new double[]{tmp%width,tmp/width};
 			}
 			if (run)
 			{
@@ -827,12 +829,12 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 					}
 					if (state == DrawingState.ESC)
 					{
-						FireListenersThread thr = new FireListenersThread(pathClone, PathEvent.FINAL_PATH);
+						final FireListenersThread thr = new FireListenersThread(pathClone, PathEvent.FINAL_PATH);
 						thr.start();
 					}
 					else
 					{
-						FireListenersThread thr = new FireListenersThread(pathClone, PathEvent.TEMPORARY_PATH);
+						final FireListenersThread thr = new FireListenersThread(pathClone, PathEvent.TEMPORARY_PATH);
 						thr.start();
 					}
 				}
@@ -850,7 +852,8 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 			pathThreadListLock.unlock();
 		}
 
-		public void actionPerformed(ActionEvent e){
+		@Override
+		public void actionPerformed(final ActionEvent e){
 			interrupt();
 		}
 
@@ -864,7 +867,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 	{
 		boolean addNewMapThread = false;
 
-		public ComputeFinalPathThreadWaiting(int xInit, int yInit, int xFinal, int yFinal, boolean addNewMapThread) {
+		public ComputeFinalPathThreadWaiting(final int xInit, final int yInit, final int xFinal, final int yFinal, final boolean addNewMapThread) {
 			super(xInit, yInit, xFinal, yFinal);
 			this.addNewMapThread = addNewMapThread;
 		}
@@ -898,7 +901,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 
 		boolean run = true;
 
-		public ComputePathThreadWaiting(int xInit, int yInit, int xFinal, int yFinal)
+		public ComputePathThreadWaiting(final int xInit, final int yInit, final int xFinal, final int yFinal)
 		{
 			this.xInit = xInit;
 			this.yInit = yInit;
@@ -910,19 +913,19 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 		{
 			boolean found = false;
 			boolean wait = false;
-			int idxInit = xInit + yInit*width;
-			int idxFinal = xFinal + yFinal*width;
+			final int idxInit = xInit + yInit*width;
+			final int idxFinal = xFinal + yFinal*width;
 			ArrayList<Thread> threadList = new ArrayList<Thread>();
-			int[] prev = new int[width*height];
+			final int[] prev = new int[width*height];
 			while(run && !found)
 			{
 				mapThreadListLock.lock();
 				threadList = new ArrayList<Thread>();
 				threadList.addAll(mapThreadList);
 				mapThreadListLock.unlock();
-				for (Thread thr:threadList)
+				for (final Thread thr:threadList)
 				{
-					ComputeMapThread mapThread = (ComputeMapThread) thr;
+					final ComputeMapThread mapThread = (ComputeMapThread) thr;
 					if(mapThread.run && mapThread.xInit==xInit && mapThread.yInit == mapThread.yInit)
 					{
 						if (mapThread.visited[idxFinal])
@@ -942,7 +945,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 						try{
 							visitedCondition.await(); // we could put a timer to force it to retry
 						}
-						catch(InterruptedException e)
+						catch(final InterruptedException e)
 						{
 							e.printStackTrace();
 						}
@@ -953,7 +956,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 					}
 				}
 			}			
-			ArrayList<Integer> path = new ArrayList<Integer>();
+			final ArrayList<Integer> path = new ArrayList<Integer>();
 			int idx = idxFinal;
 			path.add(new Integer(idxFinal));
 			while(idx!=idxInit && !isInterrupted() && run)
@@ -961,12 +964,12 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 				idx=prev[idx];
 				path.add(new Integer(idx));
 			}
-			int pathLength = path.size();
-			double[][] pathTab = new double[pathLength][2];
+			final int pathLength = path.size();
+			final double[][] pathTab = new double[pathLength][2];
 			for (int cnt = 0; cnt<pathLength; cnt++)
 			{
-				int tmp = path.get(pathLength-cnt-1);
-				pathTab[cnt] = new double[]{tmp%width,(int)(tmp/width)};
+				final int tmp = path.get(pathLength-cnt-1);
+				pathTab[cnt] = new double[]{tmp%width,tmp/width};
 			}
 			if (run)
 			{
@@ -982,12 +985,12 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 					}
 					if (state == DrawingState.ESC)
 					{
-						FireListenersThread thr = new FireListenersThread(pathClone, PathEvent.FINAL_PATH);
+						final FireListenersThread thr = new FireListenersThread(pathClone, PathEvent.FINAL_PATH);
 						thr.start();
 					}
 					else
 					{
-						FireListenersThread thr = new FireListenersThread(pathClone, PathEvent.TEMPORARY_PATH);
+						final FireListenersThread thr = new FireListenersThread(pathClone, PathEvent.TEMPORARY_PATH);
 						thr.start();
 					}
 				}
@@ -1005,7 +1008,8 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 			pathThreadListLock.unlock();
 		}
 
-		public void actionPerformed(ActionEvent e){
+		@Override
+		public void actionPerformed(final ActionEvent e){
 			interrupt();
 		}
 
@@ -1030,7 +1034,7 @@ public class InteractiveMultipleDjikstraTracingESC extends Overlay
 		@Override
 		public void run()
 		{
-			for (PathListener listener:pathListenerList)
+			for (final PathListener listener:pathListenerList)
 				listener.refreshPath(pathEvent, InteractiveMultipleDjikstraTracingESC.this, path);
 			runningThreads.remove(this);
 		}

@@ -23,7 +23,7 @@ import icy.painter.Overlay;
 import icy.sequence.Sequence;
 import icy.type.collection.array.ArrayUtil;
 
-public class InteractiveMultipleDjikstraTracing extends Overlay
+public class InteractiveMultipleDjikstraTracing extends Overlay implements InteractiveMultipleTracing
 {
 	// TODO: modify cost to account for the level of directionality of each
 	// pixel
@@ -425,20 +425,7 @@ public class InteractiveMultipleDjikstraTracing extends Overlay
 			return -1;
 	}
 
-	// public double[][] getOptimalPathCopy() {
-	// if (optimalPath == null)
-	// return null;
-	// pathLock.lock();
-	// //clone optimalPath
-	// final double[][] pathClone = new double[optimalPath.length][];
-	// for (int i = 0; i< optimalPath.length; i++)
-	// {
-	// pathClone[i] = optimalPath[i].clone();
-	// }
-	// pathLock.unlock();
-	// return pathClone;
-	// }
-
+	@Override
 	public ArrayList< double[][] > getOptimalPathCopy()
 	{
 		final ArrayList< double[][] > copy = new ArrayList< double[][] >();
