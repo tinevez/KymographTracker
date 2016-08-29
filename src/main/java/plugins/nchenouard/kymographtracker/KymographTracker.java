@@ -1,9 +1,5 @@
 package plugins.nchenouard.kymographtracker;
 
-import icy.gui.frame.IcyFrame;
-import icy.plugin.abstract_.PluginActionable;
-import icy.sequence.Sequence;
-
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -19,6 +15,10 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+import icy.gui.frame.IcyFrame;
+import icy.plugin.abstract_.PluginActionable;
+import icy.sequence.Sequence;
+
 public class KymographTracker extends PluginActionable
 {
 	Sequence selectedSequence = null;
@@ -33,22 +33,22 @@ public class KymographTracker extends PluginActionable
 	private void generateGUI()
 	{
 		mainPanel = new JPanel();
-		mainFrame = new IcyFrame("Kymograph Tracker", true, true, false, true);
+		mainFrame = new IcyFrame( "Kymograph Tracker v1.0.0.7", true, true, false, true );
 
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
+		final DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
 		actionPanels = new ArrayList<ActionPanel>();
 
-		SequenceSelectionPanel sequencePanel = new SequenceSelectionPanel(this);
+		final SequenceSelectionPanel sequencePanel = new SequenceSelectionPanel(this);
 		root.add(sequencePanel.node);
 		actionPanels.add(sequencePanel);
 		sequencePanel.startWorkFlowButton.addActionListener(new ActionListener(){
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				for (ActionPanel p:actionPanels)
+			public void actionPerformed(final ActionEvent e) {
+				for (final ActionPanel p:actionPanels)
 				{
 					if (p instanceof WorkFlowPanel)
 					{
-						CardLayout cl = (CardLayout)(centerPanel.getLayout());
+						final CardLayout cl = (CardLayout)(centerPanel.getLayout());
 						cl.show(centerPanel, p.description);	
 					}
 //					if (p instanceof KymographExtractorPanel)
@@ -62,17 +62,17 @@ public class KymographTracker extends PluginActionable
 				}
 			}});	
 		
-		WorkFlowPanel workFlowPanel = new WorkFlowPanel();
-		DefaultMutableTreeNode workFlowNode = workFlowPanel.node;
+		final WorkFlowPanel workFlowPanel = new WorkFlowPanel();
+		final DefaultMutableTreeNode workFlowNode = workFlowPanel.node;
 		root.add( workFlowNode);
 		workFlowPanel.startWorkFlowButton.addActionListener(new ActionListener(){
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			for (ActionPanel p:actionPanels)
+		public void actionPerformed(final ActionEvent arg0) {
+			for (final ActionPanel p:actionPanels)
 			{
 				if (p instanceof KymographExtractorPanel)
 				{
-					CardLayout cl = (CardLayout)(centerPanel.getLayout());
+					final CardLayout cl = (CardLayout)(centerPanel.getLayout());
 					cl.show(centerPanel, p.description);
 //					((KymographExtractorPanel) p).enableGUI(selectedSequence != null);
 				}
@@ -84,13 +84,13 @@ public class KymographTracker extends PluginActionable
 		}});
 		actionPanels.add(workFlowPanel);
 		
-		KymographExtractorPanel extractorPanel = new KymographExtractorPanel(false);
+		final KymographExtractorPanel extractorPanel = new KymographExtractorPanel(false);
 		workFlowNode.add(extractorPanel.node);
 		actionPanels.add(extractorPanel);
 		extractorPanel.startTrackingButton.addActionListener(new ActionListener(){
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				for (ActionPanel p:actionPanels)
+			public void actionPerformed(final ActionEvent e) {
+				for (final ActionPanel p:actionPanels)
 				{
 //					if (p instanceof WorkFlowPanel)
 //					{
@@ -102,23 +102,23 @@ public class KymographTracker extends PluginActionable
 //					}
 					if (p instanceof KymographTrackerPanel)
 					{
-						CardLayout cl = (CardLayout)(centerPanel.getLayout());
+						final CardLayout cl = (CardLayout)(centerPanel.getLayout());
 						cl.show(centerPanel, p.description);	
 					}
 				}
 			}});	
 		
 		
-		KymographTrackerPanel trackerPanel = new KymographTrackerPanel();
+		final KymographTrackerPanel trackerPanel = new KymographTrackerPanel();
 		workFlowNode.add(trackerPanel.node);
 		actionPanels.add(trackerPanel);
 
-		ResultExportPanel exportPanel = new ResultExportPanel();
+		final ResultExportPanel exportPanel = new ResultExportPanel();
 		workFlowNode.add(exportPanel.node);
 		actionPanels.add(exportPanel);
 
 
-		ResultImportPanel importPanel = new ResultImportPanel();
+		final ResultImportPanel importPanel = new ResultImportPanel();
 		root.add(importPanel.node);
 		actionPanels.add(importPanel);
 
@@ -132,21 +132,21 @@ public class KymographTracker extends PluginActionable
 			tree.expandRow( row );	    
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		tree.setOpaque(true);
-		JScrollPane treeScrollPane = new JScrollPane(tree);
+		final JScrollPane treeScrollPane = new JScrollPane(tree);
 
 		mainPanel.setLayout(new BorderLayout());
 
-		JPanel leftPanel = new JPanel(new BorderLayout());
+		final JPanel leftPanel = new JPanel(new BorderLayout());
 		leftPanel.add(treeScrollPane, BorderLayout.CENTER);
 		mainPanel.add(leftPanel, BorderLayout.WEST);
 
 		centerPanel = new JPanel(new CardLayout());
-		for (ActionPanel p:actionPanels)
+		for (final ActionPanel p:actionPanels)
 			centerPanel.add(p, p.description);
 		tree.addTreeSelectionListener(new TreeSelectionListener(){
 			@Override
-			public void valueChanged(TreeSelectionEvent event) {
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+			public void valueChanged(final TreeSelectionEvent event) {
+				final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 				refreshCenterPanel(node);
 			}});
 
@@ -162,10 +162,10 @@ public class KymographTracker extends PluginActionable
 		changeSelectedSequence(sequencePanel.sequenceChooser.getSelectedSequence());
 	}
 
-	private void refreshCenterPanel(DefaultMutableTreeNode node)
+	private void refreshCenterPanel(final DefaultMutableTreeNode node)
 	{
-		CardLayout cl = (CardLayout)(centerPanel.getLayout());
-		for (ActionPanel p:actionPanels)
+		final CardLayout cl = (CardLayout)(centerPanel.getLayout());
+		for (final ActionPanel p:actionPanels)
 		{
 			if (node == p.node)
 				cl.show(centerPanel, p.description);
@@ -180,10 +180,10 @@ public class KymographTracker extends PluginActionable
 		}
 	}
 
-	protected void changeSelectedSequence(Sequence sequence)
+	protected void changeSelectedSequence(final Sequence sequence)
 	{
 		this.selectedSequence = sequence;
-		for (ActionPanel p:actionPanels)
+		for (final ActionPanel p:actionPanels)
 			p.changeSelectedSequence(sequence);
 	}
 
