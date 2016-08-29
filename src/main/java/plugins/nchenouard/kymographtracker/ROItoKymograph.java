@@ -14,6 +14,7 @@ import plugins.kernel.roi.roi2d.ROI2DShape;
 import plugins.nchenouard.isotropicwavelets.IsotropicWaveletType;
 import plugins.nchenouard.kymographtracker.spline.CubicSmoothingSpline;
 import plugins.nchenouard.rieszwavelets.HarmonicTypes;
+import plugins.nchenouard.rieszwavelets.KymographSeparator;
 import plugins.nchenouard.rieszwavelets.RieszConfig;
 import plugins.nchenouard.rieszwavelets.RieszGeneralization;
 import plugins.nchenouard.rieszwavelets.RieszWaveletCoefficients;
@@ -217,15 +218,14 @@ public class ROItoKymograph
 
 	public Sequence[] getAnteroRetroKymographSequence( final Sequence sequence, final double length, final CubicSmoothingSpline xSpline, final CubicSmoothingSpline ySpline )
 	{
-
 		final Sequence kymographSeq = getKymographSequence( sequence, length, xSpline, ySpline );
-		return separateKymograph( kymographSeq );
+		return KymographSeparator.separateKymograph( kymographSeq );
 	}
 
 	public Sequence[] getAnteroRetroKymographSequenceFromDisks( final Sequence sequence, final ArrayList< double[] > samplingPositions )
 	{
 		final Sequence kymographSeq = getKymographSequenceFromDisks( sequence, samplingPositions );
-		return separateKymograph( kymographSeq );
+		return KymographSeparator.separateKymograph( kymographSeq );
 	}
 
 	ArrayList< double[] > samplingPositions;
