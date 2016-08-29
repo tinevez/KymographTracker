@@ -100,8 +100,7 @@ public class KymographSeparator
 		}
 		// diminish the lowPass residual
 		for ( int k = 0; k < retroLPResidual.length; k++ )
-//			retroLPResidual[ k ] /= 2;
-			retroLPResidual[ k ] = 0;
+			retroLPResidual[ k ] /= 2;
 
 		// reconstruct image from coefficients
 		final Sequence retroSeq = new Sequence();
@@ -112,6 +111,7 @@ public class KymographSeparator
 		{
 			final double[][] anteroCoeffs = anteroCoefficients.getRieszBandsAtScale( i );
 
+			// Remove first band at theta = 0º;
 			for ( int k = 0; k < anteroCoeffs[ 0 ].length; k++ )
 				anteroCoeffs[ 0 ][ k ] = 0;
 
@@ -122,8 +122,7 @@ public class KymographSeparator
 		// diminish the lowPass residual
 		final double[] anteroLPresidual = anteroCoefficients.getLPResidual();
 		for ( int k = 0; k < anteroLPresidual.length; k++ )
-//			anteroLPresidual[ k ] /= 2;
-			anteroLPresidual[ k ] = 0;
+			anteroLPresidual[ k ] /= 2;
 
 		final Sequence anteroSeq = new Sequence();
 		final double[] reconstructedImage2 = config.multiscaleRieszSynthesisInFourier( anteroCoefficients, width, height );
