@@ -19,7 +19,7 @@ import icy.gui.frame.IcyFrame;
 import icy.plugin.abstract_.PluginActionable;
 import icy.sequence.Sequence;
 
-public class KymographTracker extends PluginActionable
+public class KymographTracker2 extends PluginActionable
 {
 	Sequence selectedSequence = null;
 
@@ -33,7 +33,7 @@ public class KymographTracker extends PluginActionable
 	private void generateGUI()
 	{
 		mainPanel = new JPanel();
-		mainFrame = new IcyFrame( "Kymograph Tracker v1.0.0.7", true, true, false, true );
+		mainFrame = new IcyFrame( "Kymograph Tracker v2.0.0.0", true, true, false, true );
 
 		final DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
 		actionPanels = new ArrayList<ActionPanel>();

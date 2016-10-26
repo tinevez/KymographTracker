@@ -20,12 +20,12 @@ class SequenceSelectionPanel extends ActionPanel
 	/**
 	 * 
 	 */
-	private KymographTracker kymographTracker;
+	private KymographTracker2 kymographTracker;
 	private static final long serialVersionUID = 802043406982206717L;
 	SequenceChooser sequenceChooser;
 	JButton startWorkFlowButton;
 	
-	public SequenceSelectionPanel(KymographTracker kymographTracker) {
+	public SequenceSelectionPanel(KymographTracker2 kymographTracker) {
 		this.kymographTracker = kymographTracker;
 		description = "Image sequence selection";
 		node = new DefaultMutableTreeNode(description);
