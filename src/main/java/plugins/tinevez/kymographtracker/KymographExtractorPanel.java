@@ -645,11 +645,11 @@ class KymographExtractorPanel extends ActionPanel implements PathListener
 						kymo.setName( roi.getName() + "_kymograph" );
 						Icy.getMainInterface().addSequence( kymo );
 
-						final Sequence anteroKymo = kymographs[ 1 ];
+						final Sequence anteroKymo = kymographs[ 2 ];
 						anteroKymo.setName( roi.getName() + "_anteroKymograph" );
 						Icy.getMainInterface().addSequence( anteroKymo );
 
-						final Sequence retroKymo = kymographs[ 2 ];
+						final Sequence retroKymo = kymographs[ 1 ];
 						retroKymo.setName( roi.getName() + "_retroKymograph" );
 						Icy.getMainInterface().addSequence( retroKymo );
 						final KymographExtractionResult result = new KymographExtractionResult();
