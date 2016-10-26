@@ -106,7 +106,6 @@ public class KymographSeparator
 		// reconstruct image from coefficients
 		final Sequence retroSeq = new Sequence();
 		final double[] reconstructedImage = config.multiscaleRieszSynthesisInFourier( retroCoefficients, width, height );
-		retroSeq.addImage( 0, new IcyBufferedImage( width, height, reconstructedImage ) );
 
 		// Ensure the image does not have negative pixels.
 		double minRetro = Double.POSITIVE_INFINITY;
@@ -116,8 +115,9 @@ public class KymographSeparator
 		for ( int i = 0; i < reconstructedImage.length; i++ )
 		{
 			final double d = reconstructedImage[ i ];
-			reconstructedImage[ i ] = d + minRetro + Float.MIN_NORMAL;
+			reconstructedImage[ i ] = d + Math.abs( minRetro ) + Float.MIN_NORMAL;
 		}
+		retroSeq.addImage( 0, new IcyBufferedImage( width, height, reconstructedImage ) );
 
 		for ( int i = 0; i < anteroCoefficients.getNumScales(); i++ )
 		{
@@ -148,10 +148,10 @@ public class KymographSeparator
 		for ( int i = 0; i < reconstructedImage2.length; i++ )
 		{
 			final double d = reconstructedImage2[ i ];
-			reconstructedImage2[ i ] = d + minAntero + Float.MIN_NORMAL;
+			reconstructedImage2[ i ] = d + Math.abs( minAntero ) + Float.MIN_NORMAL;
 		}
-
 		anteroSeq.addImage( 0, new IcyBufferedImage( width, height, reconstructedImage2 ) );
+
 
 		// Generate filtered kymograph
 		for ( int i = 0; i < anteroCoefficients.getNumScales(); i++ )
