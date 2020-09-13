@@ -641,6 +641,9 @@ class KymographExtractorPanel extends ActionPanel implements PathListener
 						final double length = Util.getSplineLength( ( ROI2DShape ) roi );
 						kymographs = extractor.getAnteroRetroKymographSequence( selectedSequence, length, xSpline, ySpline );
 
+						for ( final Sequence kymograph : kymographs )
+							KymographScaleBar.addScaleBarTo( kymograph );
+
 						final Sequence kymo = kymographs[ 0 ];
 						kymo.setName( roi.getName() + "_kymograph" );
 						Icy.getMainInterface().addSequence( kymo );
@@ -669,6 +672,7 @@ class KymographExtractorPanel extends ActionPanel implements PathListener
 						final CubicSmoothingSpline ySpline = Util.getYsplineFromROI( ( ROI2DShape ) roi );
 						final double length = Util.getSplineLength( ( ROI2DShape ) roi );
 						kymograph = extractor.getKymographSequence( selectedSequence, length, xSpline, ySpline );
+						KymographScaleBar.addScaleBarTo( kymograph );
 
 						kymograph.setName( roi.getName() + "_kymograph" );
 						Icy.getMainInterface().addSequence( kymograph );
