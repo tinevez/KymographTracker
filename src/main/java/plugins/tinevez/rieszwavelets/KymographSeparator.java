@@ -115,7 +115,7 @@ public class KymographSeparator
 		for ( int i = 0; i < reconstructedImage.length; i++ )
 		{
 			final double d = reconstructedImage[ i ];
-			reconstructedImage[ i ] = d + Math.abs( minRetro ) + Float.MIN_NORMAL;
+			reconstructedImage[ i ] = d - minRetro + Float.MIN_NORMAL;
 		}
 		retroSeq.addImage( 0, new IcyBufferedImage( width, height, reconstructedImage ) );
 
@@ -148,7 +148,7 @@ public class KymographSeparator
 		for ( int i = 0; i < reconstructedImage2.length; i++ )
 		{
 			final double d = reconstructedImage2[ i ];
-			reconstructedImage2[ i ] = d + Math.abs( minAntero ) + Float.MIN_NORMAL;
+			reconstructedImage2[ i ] = d - minAntero + Float.MIN_NORMAL;
 		}
 		anteroSeq.addImage( 0, new IcyBufferedImage( width, height, reconstructedImage2 ) );
 
@@ -167,7 +167,15 @@ public class KymographSeparator
 		final double[] reconstructedImage3 = config.multiscaleRieszSynthesisInFourier( anteroCoefficients, width, height );
 		filteredSeq.addImage( 0, new IcyBufferedImage( width, height, reconstructedImage3 ) );
 
-		return new Sequence[] { filteredSeq, anteroSeq, retroSeq };
+		final Sequence[] out = new Sequence[] { filteredSeq, anteroSeq, retroSeq };
+		for ( final Sequence sequence : out )
+		{
+			// Set metadata.
+			sequence.setPixelSizeX( kymographSeq.getPixelSizeX() );
+			sequence.setPixelSizeY( kymographSeq.getPixelSizeY() );
+			sequence.setTimeInterval( kymographSeq.getTimeInterval() );
+		}
+		return out;
 	}
 
 	/*

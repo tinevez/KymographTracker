@@ -286,6 +286,12 @@ public class ROItoKymograph
 				cnt++;
 			}
 		}
+
+		// Set metadata.
+		kymographSeq.setPixelSizeX( sequence.getPixelSizeX() );
+		kymographSeq.setPixelSizeY( sequence.getPixelSizeY() );
+		kymographSeq.setTimeInterval( sequence.getTimeInterval() );
+
 		kymographSeq.dataChanged();
 		return kymographSeq;
 	}
@@ -346,6 +352,12 @@ public class ROItoKymograph
 				cnt++;
 			}
 		}
+
+		// Set metadata.
+		kymographSeq.setPixelSizeX( sequence.getPixelSizeX() );
+		kymographSeq.setPixelSizeY( sequence.getPixelSizeY() );
+		kymographSeq.setTimeInterval( sequence.getTimeInterval() );
+
 		kymographSeq.dataChanged();
 		return kymographSeq;
 	}
