@@ -651,10 +651,7 @@ public class KymographScaleBar extends Plugin implements PluginDaemon, GlobalSeq
 
 	@Override
 	public void run()
-	{
-		for ( final Sequence s : getSequences() )
-			addScaleBarTo( s );
-	}
+	{}
 
 	@Override
 	public void stop()
