@@ -33,7 +33,7 @@ public class KymographTracker2 extends PluginActionable
 	private void generateGUI()
 	{
 		mainPanel = new JPanel();
-		mainFrame = new IcyFrame( "Kymograph Tracker v2.1.0.0", true, true, false, true );
+		mainFrame = new IcyFrame( "Kymograph Tracker v2.1.1.0", true, true, false, true );
 
 		final DefaultMutableTreeNode root = new DefaultMutableTreeNode("");
 		actionPanels = new ArrayList<ActionPanel>();
