@@ -14,8 +14,8 @@
         <file path="/KymographTracker/README.md"/>
         <file path="/KymographTracker/.classpath"/>
         <file path="/KymographTracker/LICENSE"/>
-        <javaElement handleIdentifier="=KymographTracker/src\/test\/java"/>
+        <javaElement handleIdentifier="=KymographTracker/src\/test\/java=/test=/true=/=/optional=/true=/=/maven.pomderived=/true=/"/>
         <folder path="/KymographTracker/src"/>
-        <javaElement handleIdentifier="=KymographTracker/src\/main\/java"/>
+        <javaElement handleIdentifier="=KymographTracker/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/"/>
     </selectedElements>
 </jardesc>
