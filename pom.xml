@@ -4,12 +4,12 @@
                              http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <!-- Inherited Icy Parent POM -->
-    <parent>
-        <groupId>org.bioimageanalysis.icy</groupId>
-        <artifactId>parent-pom-plugin</artifactId>
-        <version>1.0.3</version>
-    </parent>
+	<!-- Inherited Icy Parent POM -->
+	<parent>
+		<groupId>org.bioimageanalysis.icy</groupId>
+		<artifactId>parent-pom-plugin</artifactId>
+		<version>1.0.3</version>
+	</parent>
 
 
 	<artifactId>kymograph-tracker</artifactId>
@@ -21,16 +21,23 @@
 
 	<properties>
 		<scijava.jvm.version>1.8</scijava.jvm.version>
-		<enforcer.skip>true</enforcer.skip>
+		
+		<license.licenseName>gpl_3</license.licenseName>
+		<license.projectName>KymographTracker2</license.projectName>
+		<license.organizationName>KymographTracker2 authors</license.organizationName>
+		<license.copyrightOwners>Nicolas Chenouard, Jean-Yves Tinevez</license.copyrightOwners>
+
+		<!-- NB: Deploy releases to the SciJava Maven repository. -->
+		<releaseProfiles>deploy-to-scijava</releaseProfiles>
 	</properties>
-	
-	 <licenses>
-        <license>
-            <name>GNU GPLv3</name>
-            <url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+
+	<licenses>
+		<license>
+			<name>GNU GPLv3</name>
+			<url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<dependencies>
 		<!-- The core of Icy -->
@@ -44,35 +51,35 @@
 			<groupId>org.bioimageanalysis.icy</groupId>
 			<artifactId>ezplug</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.bioimageanalysis.icy</groupId>
 			<artifactId>track-manager</artifactId>
 			<version>1.4.6</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.bioimageanalysis.icy</groupId>
 			<artifactId>isotropic-wavelet-transform</artifactId>
-			 <version>1.1.0</version>
+			<version>1.1.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.bioimageanalysis.icy</groupId>
 			<artifactId>scale-bar</artifactId>
-    		<version>3.2.0</version>
+			<version>3.2.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.bioimageanalysis.icy</groupId>
 			<artifactId>jfree-common</artifactId>
-   			<version>1.0.24</version>
+			<version>1.0.24</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.bioimageanalysis.icy</groupId>
 			<artifactId>jfreechart</artifactId>
-    		<version>1.5.3</version>
+			<version>1.5.3</version>
 		</dependency>
 
 	</dependencies>
@@ -107,15 +114,36 @@
 			</roles>
 		</developer>
 	</developers>
-	
-	 <!-- Icy Maven repository (to find parent POM) -->
-    <repositories>
-        <repository>
-            <id>icy</id>
-            <name>Icy's Nexus</name>
-            <url>https://icy-nexus.pasteur.fr/repository/Icy/</url>
-        </repository>
-    </repositories>
-	
+
+	<!-- Icy Maven repository (to find parent POM) -->
+	<repositories>
+		<repository>
+			<id>icy</id>
+			<name>Icy's Nexus</name>
+			<url>https://icy-nexus.pasteur.fr/repository/Icy/</url>
+		</repository>
+	</repositories>
+
+
+	<mailingLists>
+		<mailingList>
+			<name>Image.sc Forum</name>
+			<archive>https://forum.image.sc/tags/icy</archive>
+		</mailingList>
+	</mailingLists>
+
+	<scm>
+		<connection>scm:git:git://github.com/tinevez/KymographTracker</connection>
+		<developerConnection>scm:git:git@github.com/tinevez/KymographTracker</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/tinevez/KymographTracker</url>
+	</scm>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/tinevez/KymographTracker/issues</url>
+	</issueManagement>
+	<ciManagement>
+	</ciManagement>
+
 
 </project>
