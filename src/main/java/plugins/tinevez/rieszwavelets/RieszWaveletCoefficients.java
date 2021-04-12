@@ -43,7 +43,9 @@ public class RieszWaveletCoefficients
 	
 	/**
 	 * Duplicate coefficients
-	 * */
+	 * 
+	 * @return a new {@link RieszWaveletCoefficients} object.
+	 */
 	public RieszWaveletCoefficients duplicateCoefficients()
 	{
 		ArrayList<RieszGeneralization> generalizationList2 = new ArrayList<RieszGeneralization>(generalizationList);

@@ -170,10 +170,11 @@ public class RieszWaveletConfig
 
 	/**
 	 * Synthesize a 2D image from as set of Riesz-wavelet coefficients
-	 * @param coefficients
+	 * @param coefficients the Riesz-wavelet coefficients
 	 * @param width width of the image
 	 * @param height height of the image
-	 * */	
+	 * @return the 2D image as a <code>double[]</code> array
+	 */	
 	public double[] multiscaleRieszSynthesisInFourier(RieszWaveletCoefficients coefficients, int width, int height)
 	{
 		double[][] waveletBands = new double[coefficients.getNumScales()][];

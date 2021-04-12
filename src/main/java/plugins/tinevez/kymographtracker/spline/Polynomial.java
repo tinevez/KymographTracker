@@ -31,10 +31,9 @@ package plugins.tinevez.kymographtracker.spline;
  * Represents a polynomial of degree <SPAN CLASS="MATH"><I>n</I></SPAN> in power form. Such a polynomial is of
  * the form
  * 
- * <P></P>
  * <DIV CLASS="mathdisplay">
  * <I>p</I>(<I>x</I>) = <I>c</I><SUB>0</SUB> + <I>c</I><SUB>1</SUB><I>x</I> + <SUP> ... </SUP> + <I>c</I><SUB>n</SUB><I>x</I><SUP>n</SUP>,
- * </DIV><P></P>
+ * </DIV>
  * where 
  * <SPAN CLASS="MATH"><I>c</I><SUB>0</SUB>,&#8230;, <I>c</I><SUB>n</SUB></SPAN> are the coefficients of the polynomial.
  * 
@@ -89,8 +88,9 @@ public class Polynomial implements Cloneable {
 
    /**
     * Returns the <SPAN CLASS="MATH"><I>i</I></SPAN>th coefficient of the polynomial.
-    * 
-    * @return the array of coefficients.
+    *
+    * @param i the index of the coefficient
+    * @return the value of the ith coefficient
     * 
     */
    public double getCoefficient (int i) {
@@ -192,14 +192,13 @@ public class Polynomial implements Cloneable {
     * Returns a polynomial representing the integral of this polynomial.
     *  This integral is of the form
     * 
-    * <P></P>
     * <DIV CLASS="mathdisplay">
     * &int;<I>p</I>(<I>x</I>)<I>dx</I> = <I>c</I> + <I>c</I><SUB>0</SUB><I>x</I> + <IMG
-    *   BORDER="0" SRC="Polynomialimg1.png"
+    *  SRC="Polynomialimg1.png"
     *  ALT="$\displaystyle {\frac{{c_1 x^2}}{2}}$"> + <SUP> ... </SUP> + <IMG
-    *  BORDER="0" SRC="Polynomialimg2.png"
+    *  SRC="Polynomialimg2.png"
     *  ALT="$\displaystyle {\frac{{c_n x^{n+1}}}{{n+1}}}$">,
-    * </DIV><P></P>
+    * </DIV>
     * where <SPAN CLASS="MATH"><I>c</I></SPAN> is a user-defined constant.
     * 
     * @param c the constant for the integral.

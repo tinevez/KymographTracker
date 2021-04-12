@@ -657,6 +657,8 @@ public class RieszWavelets extends PluginActionable
 
 	/**
 	 * Display a set of coefficients as ICY sequences of images
+	 * 
+	 * @param results the set of coefficients to display. 
 	 * */
 	public void displayCoefficients(SequenceAnalysisResults results)
 	{

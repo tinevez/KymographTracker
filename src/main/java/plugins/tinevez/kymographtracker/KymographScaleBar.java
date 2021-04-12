@@ -577,7 +577,8 @@ public class KymographScaleBar extends Plugin implements PluginDaemon, GlobalSeq
 		 * Sets whether the scale should automatically guess its optimal size
 		 * and unit
 		 * 
-		 * @param autoSize
+		 * @param autoSize whether the scale should automatically guess its optimal size
+		 * and unit
 		 */
 		public void setAutoSize( final boolean autoSize )
 		{
@@ -609,7 +610,7 @@ public class KymographScaleBar extends Plugin implements PluginDaemon, GlobalSeq
 		/**
 		 * Sets whether the scale bar's size should appear next to it
 		 * 
-		 * @param displayText
+		 * @param displayText whether the scale bar's size should appear next to it
 		 */
 		public void setTextDisplay( final boolean displayText )
 		{

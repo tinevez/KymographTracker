@@ -129,7 +129,9 @@ public class InteractiveDjikstraTracing extends Overlay
 
 	/**
 	 * Add a listener to the changes of path
-	 */
+	 * 
+	 * @param listener the listener to add	 
+	 * */
 	public void addPathLister( final PathListener listener )
 	{
 		pathListenerList.add( listener );
@@ -137,6 +139,8 @@ public class InteractiveDjikstraTracing extends Overlay
 
 	/**
 	 * Remove a listener to the changes of path
+	 * 
+	 * @param listener the listener to remove
 	 */
 	public void removePathLister( final PathListener listener )
 	{

@@ -137,6 +137,8 @@ public class InteractiveMultipleDjikstraTracing extends Overlay implements Inter
 
 	/**
 	 * Add a listener to the changes of path
+	 * 
+	 * @param listener the listener to remove
 	 */
 	public void addPathLister( final PathListener listener )
 	{
@@ -145,6 +147,8 @@ public class InteractiveMultipleDjikstraTracing extends Overlay implements Inter
 
 	/**
 	 * Remove a listener to the changes of path
+	 * 
+	 * @param listener the listener to remove
 	 */
 	public void removePathLister( final PathListener listener )
 	{

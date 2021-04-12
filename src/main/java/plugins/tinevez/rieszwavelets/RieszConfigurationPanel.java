@@ -84,6 +84,8 @@ public class RieszConfigurationPanel extends JPanel
 
 	/**
 	 * Get the type of circular harmonics to be used for the  for the generalized Riesz transform, as specified in the GUI
+	 * 
+	 * @return the type of circular harmonics 
 	 * */
 	public HarmonicTypes getHarmonicType()
 	{

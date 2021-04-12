@@ -36,10 +36,9 @@ package plugins.tinevez.kymographtracker.spline;
  * <SPAN CLASS="MATH"><I>i</I> = 1,&#8230;, <I>n</I> - 1</SPAN>, is defined as <SPAN CLASS="MATH"><I>S</I><SUB>i</SUB>(<I>x</I>)</SPAN> while the complete spline is
  * defined as
  *  
- * <P></P>
  * <DIV CLASS="mathdisplay">
  * <I>S</I>(<I>x</I>) = <I>S</I><SUB>i</SUB>(<I>x</I>),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for <I>x</I>&#8712;[<I>x</I><SUB>i-1</SUB>, <I>x</I><SUB>i</SUB>].
- * </DIV><P></P>
+ * </DIV>
  * For <SPAN CLASS="MATH"><I>x</I> &lt; <I>x</I><SUB>0</SUB></SPAN> and
  * <SPAN CLASS="MATH"><I>x</I> &gt; <I>x</I><SUB>n-1</SUB></SPAN>, the spline is not precisely defined, but this class performs
  * extrapolation by using <SPAN CLASS="MATH"><I>S</I><SUB>0</SUB></SPAN> and <SPAN CLASS="MATH"><I>S</I><SUB>n</SUB></SPAN> linear polynomials.
@@ -58,18 +57,15 @@ package plugins.tinevez.kymographtracker.spline;
  * <SPAN CLASS="MATH"><I>&#961;</I>&#8712;[0, 1]</SPAN> which represents its accuracy with respect to the initial 
  * <SPAN CLASS="MATH">(<I>x</I><SUB>i</SUB>, <I>y</I><SUB>i</SUB>)</SPAN> nodes. The smoothing spline minimizes
  * 
- * <P></P>
  * <DIV CLASS="mathdisplay">
- * <I>L</I> = <I>&#961;</I>&sum;<SUB>i=0</SUB><SUP>n-1</SUP><I>w</I><SUB>i</SUB>(<I>y</I><SUB>i</SUB>-<I>S</I><SUB>i</SUB>(<I>x</I><SUB>i</SUB>))<SUP>2</SUP> + (1 - <I>&#961;</I>)&int;<SUB>x<SUB>0</SUB></SUB><SUP>x<SUB>n-1</SUB></SUP>(<I>S''</I>(<I>x</I>))<SUP>2</SUP><I>dx</I>
- * </DIV><P></P>
+ * <I>L</I> = <I>&#961;</I>&sum;<SUB>i=0</SUB><SUP>n-1</SUP><I>w</I><SUB>i</SUB>(<I>y</I><SUB>i</SUB>-<I>S</I><SUB>i</SUB>(<I>x</I><SUB>i</SUB>))<SUP>2</SUP> + (1 - <I>&#961;</I>)&int;<SUB>x_0</SUB><SUP>x_(n-1)</SUP>(<I>S''</I>(<I>x</I>))<SUP>2</SUP><I>dx</I>
+ * </DIV>
  * In fact, by setting <SPAN CLASS="MATH"><I>&#961;</I> = 1</SPAN>, we obtain the interpolating spline; and
  * we obtain a linear function by setting <SPAN CLASS="MATH"><I>&#961;</I> = 0</SPAN>.
  * The weights <SPAN CLASS="MATH"><I>w</I><SUB>i</SUB> &gt; 0</SPAN>, which default to 1, can be used to change the contribution
  * of each point in the error term. A large value <SPAN CLASS="MATH"><I>w</I><SUB>i</SUB></SPAN> will give a large weight
  *  to the <SPAN CLASS="MATH"><I>i</I></SPAN>th point, so the spline will pass closer to it.
  * Here is a small example that uses smoothing splines:
- * 
- * <P>
  * 
  * <DIV CLASS="vcode">
  * <TT>
@@ -328,6 +324,7 @@ public class CubicSmoothingSpline
     *    (i.e. such that 
     * <SPAN CLASS="MATH"><I>x</I><SUB>k</SUB> &lt; <I>x</I>&nbsp;&lt;=&nbsp;<I>x</I><SUB>k+1</SUB></SPAN>).
     * 
+    * @param x the value of x
     * @return Index of the polynomial check with x in the Polynomial list returned by methodgetSplinePolynomials
     * 
     */
