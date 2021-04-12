@@ -9,3 +9,6 @@ buildNumber.properties
 .mvn/timing.properties
 .classpath
 .settings/
+samples/
+setting.xml
+workspace/
