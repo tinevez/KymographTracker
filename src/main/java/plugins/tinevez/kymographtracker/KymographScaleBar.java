@@ -36,8 +36,8 @@ import plugins.adufour.vars.lang.VarColor;
 import plugins.adufour.vars.lang.VarEnum;
 import plugins.adufour.vars.lang.VarInteger;
 import plugins.kernel.canvas.VtkCanvas;
-import plugins.tprovoost.scale.Scale.ScaleBarLocation;
-import plugins.tprovoost.scale.Scale.ScaleBarOverlay;
+import plugins.tprovoost.scale.ScaleBarLocation;
+import plugins.tprovoost.scale.ScaleBarOverlay;
 
 /**
  * Copied and adapted from the plugins.tprovoost.Scale class built by authors

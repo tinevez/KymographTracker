@@ -4,11 +4,13 @@
                              http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.bioimageanalysis.icy</groupId>
-		<artifactId>pom-icy</artifactId>
-		<version>1.0.4</version>
-	</parent>
+    <!-- Inherited Icy Parent POM -->
+    <parent>
+        <groupId>org.bioimageanalysis.icy</groupId>
+        <artifactId>parent-pom-plugin</artifactId>
+        <version>1.0.3</version>
+    </parent>
+
 
 	<artifactId>kymograph-tracker</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -32,8 +34,37 @@
 		<!-- The EzPlug library, simplifies writing UI for Icy plugins. -->
 		<dependency>
 			<groupId>org.bioimageanalysis.icy</groupId>
-			<artifactId>icy-ezplug</artifactId>
-			<version>3.15.13</version>
+			<artifactId>ezplug</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.bioimageanalysis.icy</groupId>
+			<artifactId>track-manager</artifactId>
+			<version>1.4.6</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.bioimageanalysis.icy</groupId>
+			<artifactId>isotropic-wavelet-transform</artifactId>
+			 <version>1.1.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.bioimageanalysis.icy</groupId>
+			<artifactId>scale-bar</artifactId>
+    		<version>3.2.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.bioimageanalysis.icy</groupId>
+			<artifactId>jfree-common</artifactId>
+   			<version>1.0.24</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.bioimageanalysis.icy</groupId>
+			<artifactId>jfreechart</artifactId>
+    		<version>1.5.3</version>
 		</dependency>
 
 	</dependencies>
@@ -68,5 +99,15 @@
 			</roles>
 		</developer>
 	</developers>
+	
+	 <!-- Icy Maven repository (to find parent POM) -->
+    <repositories>
+        <repository>
+            <id>icy</id>
+            <name>Icy's Nexus</name>
+            <url>https://icy-nexus.pasteur.fr/repository/Icy/</url>
+        </repository>
+    </repositories>
+	
 
 </project>
