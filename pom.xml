@@ -22,7 +22,7 @@
 	<properties>
 		<scijava.jvm.version>1.8</scijava.jvm.version>
 		
-		<license.licenseName>gpl_3</license.licenseName>
+		<license.licenseName>gpl_v3</license.licenseName>
 		<license.projectName>KymographTracker2</license.projectName>
 		<license.organizationName>KymographTracker2 authors</license.organizationName>
 		<license.copyrightOwners>Nicolas Chenouard, Jean-Yves Tinevez</license.copyrightOwners>
