@@ -22,8 +22,6 @@ import javax.swing.SpinnerNumberModel;
  * 
  * @author Nicolas Chenouard (nicolas.chenouard.dev@gmail.com)
  * @version 1.0
- * @date 2014-05-25
- * @license gpl v3.0
  */
 
 public class RieszConfigurationPanel extends JPanel
@@ -86,7 +84,6 @@ public class RieszConfigurationPanel extends JPanel
 
 	/**
 	 * Get the type of circular harmonics to be used for the  for the generalized Riesz transform, as specified in the GUI
-	 * @param the type of circular harmonics
 	 * */
 	public HarmonicTypes getHarmonicType()
 	{

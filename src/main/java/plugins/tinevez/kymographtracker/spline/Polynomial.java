@@ -32,7 +32,7 @@ package plugins.tinevez.kymographtracker.spline;
  * the form
  * 
  * <P></P>
- * <DIV ALIGN="CENTER" CLASS="mathdisplay">
+ * <DIV CLASS="mathdisplay">
  * <I>p</I>(<I>x</I>) = <I>c</I><SUB>0</SUB> + <I>c</I><SUB>1</SUB><I>x</I> + <SUP> ... </SUP> + <I>c</I><SUB>n</SUB><I>x</I><SUP>n</SUP>,
  * </DIV><P></P>
  * where 
@@ -193,11 +193,11 @@ public class Polynomial implements Cloneable {
     *  This integral is of the form
     * 
     * <P></P>
-    * <DIV ALIGN="CENTER" CLASS="mathdisplay">
+    * <DIV CLASS="mathdisplay">
     * &int;<I>p</I>(<I>x</I>)<I>dx</I> = <I>c</I> + <I>c</I><SUB>0</SUB><I>x</I> + <IMG
-    *  ALIGN="MIDDLE" BORDER="0" SRC="Polynomialimg1.png"
+    *   BORDER="0" SRC="Polynomialimg1.png"
     *  ALT="$\displaystyle {\frac{{c_1 x^2}}{2}}$"> + <SUP> ... </SUP> + <IMG
-    *  ALIGN="MIDDLE" BORDER="0" SRC="Polynomialimg2.png"
+    *  BORDER="0" SRC="Polynomialimg2.png"
     *  ALT="$\displaystyle {\frac{{c_n x^{n+1}}}{{n+1}}}$">,
     * </DIV><P></P>
     * where <SPAN CLASS="MATH"><I>c</I></SPAN> is a user-defined constant.

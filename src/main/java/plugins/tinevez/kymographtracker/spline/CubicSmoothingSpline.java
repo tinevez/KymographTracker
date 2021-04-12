@@ -37,7 +37,7 @@ package plugins.tinevez.kymographtracker.spline;
  * defined as
  *  
  * <P></P>
- * <DIV ALIGN="CENTER" CLASS="mathdisplay">
+ * <DIV CLASS="mathdisplay">
  * <I>S</I>(<I>x</I>) = <I>S</I><SUB>i</SUB>(<I>x</I>),&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for <I>x</I>&#8712;[<I>x</I><SUB>i-1</SUB>, <I>x</I><SUB>i</SUB>].
  * </DIV><P></P>
  * For <SPAN CLASS="MATH"><I>x</I> &lt; <I>x</I><SUB>0</SUB></SPAN> and
@@ -59,7 +59,7 @@ package plugins.tinevez.kymographtracker.spline;
  * <SPAN CLASS="MATH">(<I>x</I><SUB>i</SUB>, <I>y</I><SUB>i</SUB>)</SPAN> nodes. The smoothing spline minimizes
  * 
  * <P></P>
- * <DIV ALIGN="CENTER" CLASS="mathdisplay">
+ * <DIV CLASS="mathdisplay">
  * <I>L</I> = <I>&#961;</I>&sum;<SUB>i=0</SUB><SUP>n-1</SUP><I>w</I><SUB>i</SUB>(<I>y</I><SUB>i</SUB>-<I>S</I><SUB>i</SUB>(<I>x</I><SUB>i</SUB>))<SUP>2</SUP> + (1 - <I>&#961;</I>)&int;<SUB>x<SUB>0</SUB></SUB><SUP>x<SUB>n-1</SUB></SUP>(<I>S''</I>(<I>x</I>))<SUP>2</SUP><I>dx</I>
  * </DIV><P></P>
  * In fact, by setting <SPAN CLASS="MATH"><I>&#961;</I> = 1</SPAN>, we obtain the interpolating spline; and
@@ -71,7 +71,7 @@ package plugins.tinevez.kymographtracker.spline;
  * 
  * <P>
  * 
- * <DIV CLASS="vcode" ALIGN="LEFT">
+ * <DIV CLASS="vcode">
  * <TT>
  * 
  * <BR>&nbsp;&nbsp;&nbsp;int n;

@@ -14,8 +14,6 @@ import edu.emory.mathcs.jtransforms.fft.DoubleFFT_2D;
  * 
  * @author Nicolas Chenouard (nicolas.chenouard.dev@gmail.com)
  * @version 1.0
- * @date 2014-05-25
- * @license gpl v3.0
  */
 
 public class RieszConfig
@@ -290,7 +288,7 @@ public class RieszConfig
 
 	/**
 	 * Reconstruct a 2D image from a set of Riesz coefficients
-	 * @param set of Riesz coefficients
+	 * @param rieszBands set of Riesz coefficients
 	 * @param generalization the Riesz generalization used for computing the coefficients
 	 * @param inputInFourier true if Riesz coefficients are provided in the Fourier domain, false else.
 	 * @param outputInFourier true if the reconstructed image is to be returned in the Fourier domain, false if the space representation is returned.
