@@ -1,7 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                              http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<!-- Inherited Icy Parent POM -->
@@ -13,7 +10,7 @@
 
 
 	<artifactId>kymograph-tracker</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>2.1.2</version>
 	<name>KymographTracker2</name>
 	<description>An Icy plugin for extracting kymographs. This is a fork of the original KymohraphTracker by Nicolas Chenouard.</description>
 	<url>http://icy.bioimageanalysis.org/plugin/kymographtracker2/</url>
@@ -135,7 +132,7 @@
 	<scm>
 		<connection>scm:git:git://github.com/tinevez/KymographTracker</connection>
 		<developerConnection>scm:git:git@github.com/tinevez/KymographTracker</developerConnection>
-		<tag>HEAD</tag>
+		<tag>kymograph-tracker-2.1.2</tag>
 		<url>https://github.com/tinevez/KymographTracker</url>
 	</scm>
 	<issueManagement>
